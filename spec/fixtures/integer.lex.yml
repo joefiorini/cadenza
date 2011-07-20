@@ -1,0 +1,4 @@
+- type: INTEGER
+  value: 42
+  line: 1
+  column: 1
