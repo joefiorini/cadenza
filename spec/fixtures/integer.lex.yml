@@ -1,4 +1,16 @@
+# {{ 42 }}
+
+- type: VAR_OPEN
+  value: "{{"
+  line: 1
+  column: 1
+
 - type: INTEGER
   value: 42
   line: 1
-  column: 1
+  column: 4
+
+- type: VAR_CLOSE
+  value: "}}"
+  line: 1
+  column: 7

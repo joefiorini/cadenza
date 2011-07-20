@@ -3,7 +3,7 @@ module Cadenza
     attr_accessor :value
      
     def initialize(value)
-      self.value = value.value
+      self.value = value
     end
     
 #     def implied_globals
@@ -18,9 +18,9 @@ module Cadenza
 #       self.value
 #     end
     
-#     def ==(rhs)
-#       super(rhs) and self.value == rhs.value
-#     end
+    def ==(rhs)
+      self.value == rhs.value
+    end
      
 #     def to_s
 #       "ConstantNode(value:#{self.value})"

@@ -1,31 +1,20 @@
 require File.expand_path(File.join("..", "lib", "cadenza"), File.dirname(__FILE__))
-require 'yaml'
+
+Dir.glob(File.expand_path(File.join('support','*.rb'), File.dirname(__FILE__))).each do |support_file|
+  require support_file
+end
 
 def fixture_filename(filename)
   File.expand_path(File.join("fixtures", filename), File.dirname(__FILE__))
 end
 
-class FixtureLexer
-  def source=(source)
-    @data = YAML.load_file(fixture_filename source) || []
+RSpec::Matchers.define :have_an_identical_syntax_tree_to do |expected|
+  match do |actual|
+    @tree = FixtureSyntaxTree.new(expected)
+    @tree.equals(actual)
   end
 
-  def next_token
-    if @data.nil? or @data.empty?
-      [false, false]
-    else
-      make_token(@data.shift)
-    end
-  end
-
-private
-  def make_token(yaml)
-    type = yaml["type"].to_sym
-    value = yaml["value"]
-    source = yaml["value"].to_s
-    line = yaml["line"]
-    column = yaml["column"]
-
-    [type, Cadenza::Token.new(value, source, line, column)]
+  failure_message_for_should do |actual|
+    "expected that #{actual.inspect} would have an identical syntax tree to #{@tree.document.inspect}"
   end
 end

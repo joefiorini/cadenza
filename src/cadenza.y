@@ -1,11 +1,21 @@
 class Cadenza::Parser
 
 rule
-  target: primary_expression;
+  target:
+    : document
+    | /* none */ { result = nil }
+    ;
 
   primary_expression:
-    : INTEGER { result = ConstantNode.new(val[0]) }
-    | /* none */ { result = nil }
+    : INTEGER { result = ConstantNode.new(val[0].value) }
+    ;
+
+  inject_statement:
+    : VAR_OPEN primary_expression VAR_CLOSE { result = InjectNode.new(val[1]) }
+    ;
+
+  document:
+    : inject_statement { @document.children.push(val[0]) }
     ;
 
 ---- header ----
@@ -24,9 +34,9 @@ end
 
 def parse(source)
   @lexer.source = source
-  @document_stack = [DocumentNode.new]
+  @document = DocumentNode.new
   do_parse
-  @document_stack
+  @document
 end
 
 def next_token

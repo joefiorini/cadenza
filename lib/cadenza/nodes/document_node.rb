@@ -9,6 +9,10 @@ module Cadenza
       self.children = Array.new
 #       self.blocks = Hash.new
     end
+
+    def ==(rhs)
+      self.children == rhs.children
+    end
     
 #     #
 #     # Gets a list of all identifiers from the document's blocks and children

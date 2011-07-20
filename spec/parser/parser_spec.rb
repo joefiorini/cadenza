@@ -44,10 +44,6 @@ describe Cadenza::Parser do
   it "should parse an empty stream as an empty document node" do
     parser = Cadenza::Parser.new(:lexer => FixtureLexer.new)
 
-    ast = parser.parse "empty.lex.yml"
-
-    ast.length.should == 1
-    ast.first.should be_an_instance_of Cadenza::DocumentNode
-    ast.first.children.should be_empty
+    parser.parse("empty.lex.yml").should have_an_identical_syntax_tree_to "empty.parse.yml"
   end
 end

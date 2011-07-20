@@ -1,12 +1,15 @@
-# module Cadenza
-#   class InjectNode < Cadenza::Node
+module Cadenza
+  class InjectNode# < Cadenza::Node
+    attr_accessor :value
 #     attr_accessor :identifier, :filters
     
-#     def initialize(identifier,filters,pos)
-#       super(pos)
-#       self.identifier = identifier
-#       self.filters = filters
-#     end
+    def initialize(value)
+      self.value = value
+    end
+
+    def ==(rhs)
+      self.value == rhs.value
+    end
     
 #     def implied_globals
 #       identifier.implied_globals | filters.map(&:params).flatten.map(&:implied_globals).flatten
@@ -67,5 +70,5 @@
       
 #       return value
 #     end
-#   end
-# end
+  end
+end

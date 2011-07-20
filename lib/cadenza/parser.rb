@@ -11,7 +11,7 @@ require 'racc/parser.rb'
 module Cadenza
   class Parser < Racc::Parser
 
-module_eval(<<'...end cadenza.y/module_eval...', 'cadenza.y', 15)
+module_eval(<<'...end cadenza.y/module_eval...', 'cadenza.y', 25)
 attr_reader :lexer
 
 def initialize(options={})
@@ -24,9 +24,9 @@ end
 
 def parse(source)
   @lexer.source = source
-  @document_stack = [DocumentNode.new]
+  @document = DocumentNode.new
   do_parse
-  @document_stack
+  @document
 end
 
 def next_token
@@ -36,45 +36,49 @@ end
 ##### State transition tables begin ###
 
 racc_action_table = [
-     1,     4,     5 ]
+     1,     5,     7,     8,     9 ]
 
 racc_action_check = [
-     0,     2,     4 ]
+     0,     1,     2,     6,     7 ]
 
 racc_action_pointer = [
-    -2,   nil,     1,   nil,     2,   nil ]
+    -3,    -1,     2,   nil,   nil,   nil,    -1,     4,   nil,   nil ]
 
 racc_action_default = [
-    -3,    -2,    -4,    -1,    -4,     6 ]
+    -2,    -6,    -6,    -1,    -5,    -3,    -6,    -6,    -4,    10 ]
 
 racc_goto_table = [
-     2,     3 ]
+     2,     3,     6,     4 ]
 
 racc_goto_check = [
-     1,     2 ]
+     1,     2,     3,     4 ]
 
 racc_goto_pointer = [
-   nil,     0,     1 ]
+   nil,     0,     1,     1,     3 ]
 
 racc_goto_default = [
-   nil,   nil,   nil ]
+   nil,   nil,   nil,   nil,   nil ]
 
 racc_reduce_table = [
   0, 0, :racc_error,
-  1, 4, :_reduce_none,
-  1, 5, :_reduce_2,
-  0, 5, :_reduce_3 ]
+  1, 6, :_reduce_none,
+  0, 6, :_reduce_2,
+  1, 8, :_reduce_3,
+  3, 9, :_reduce_4,
+  1, 7, :_reduce_5 ]
 
-racc_reduce_n = 4
+racc_reduce_n = 6
 
-racc_shift_n = 6
+racc_shift_n = 10
 
 racc_token_table = {
   false => 0,
   :error => 1,
-  :INTEGER => 2 }
+  :INTEGER => 2,
+  :VAR_OPEN => 3,
+  :VAR_CLOSE => 4 }
 
-racc_nt_base = 3
+racc_nt_base = 5
 
 racc_use_result_var = true
 
@@ -98,9 +102,13 @@ Racc_token_to_s_table = [
   "$end",
   "error",
   "INTEGER",
+  "VAR_OPEN",
+  "VAR_CLOSE",
   "$start",
   "target",
-  "primary_expression" ]
+  "document",
+  "primary_expression",
+  "inject_statement" ]
 
 Racc_debug_parser = false
 
@@ -110,16 +118,30 @@ Racc_debug_parser = false
 
 # reduce 1 omitted
 
-module_eval(<<'.,.,', 'cadenza.y', 6)
+module_eval(<<'.,.,', 'cadenza.y', 5)
   def _reduce_2(val, _values, result)
-     result = ConstantNode.new(val[0]) 
+     result = nil 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'cadenza.y', 7)
+module_eval(<<'.,.,', 'cadenza.y', 9)
   def _reduce_3(val, _values, result)
-     result = nil 
+     result = ConstantNode.new(val[0].value) 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'cadenza.y', 13)
+  def _reduce_4(val, _values, result)
+     result = InjectNode.new(val[1]) 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'cadenza.y', 17)
+  def _reduce_5(val, _values, result)
+     @document.children.push(val[0]) 
     result
   end
 .,.,
