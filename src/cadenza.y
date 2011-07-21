@@ -13,8 +13,13 @@ rule
     | STRING     { result = ConstantNode.new(val[0].value) }
     ;
 
+  additive_expression:
+    : primary_expression
+    | additive_expression '+' primary_expression { result = ArithmeticNode.new(val[0], "+", val[2]) }
+    ;
+
   inject_statement:
-    : VAR_OPEN primary_expression VAR_CLOSE { result = InjectNode.new(val[1]) }
+    : VAR_OPEN additive_expression VAR_CLOSE { result = InjectNode.new(val[1]) }
     ;
 
   document:

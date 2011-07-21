@@ -1,6 +1,18 @@
-# module Cadenza
-#   class ArithmeticNode < Cadenza::Node
-#     attr_accessor :left, :right, :op
+module Cadenza
+  class ArithmeticNode# < Cadenza::Node
+    attr_accessor :left, :right, :operator
+
+    def initialize(left, op, right)
+      self.left = left
+      self.right = right
+      self.operator = op
+    end
+
+    def ==(rhs)
+      self.operator == rhs.operator and
+      self.left == rhs.left and
+      self.right == rhs.right
+    end
     
 #     def initialize(left,right,op,pos)
 #       super(pos)
@@ -48,5 +60,5 @@
 #     def to_s
 #       "ArithmeticNode" << TAB << self.left.to_s.gsub(/\n/,TAB) << TAB << self.op << TAB << self.right.to_s.gsub(/\n/,TAB)
 #     end
-#   end
-# end
+  end
+end
