@@ -11,7 +11,7 @@ require 'racc/parser.rb'
 module Cadenza
   class Parser < Racc::Parser
 
-module_eval(<<'...end cadenza.y/module_eval...', 'cadenza.y', 25)
+module_eval(<<'...end cadenza.y/module_eval...', 'cadenza.y', 27)
 attr_reader :lexer
 
 def initialize(options={})
@@ -36,49 +36,55 @@ end
 ##### State transition tables begin ###
 
 racc_action_table = [
-     1,     5,     7,     8,     9 ]
+     5,     6,     7,     9,     2,    10,    11 ]
 
 racc_action_check = [
-     0,     1,     2,     6,     7 ]
+     2,     2,     2,     3,     0,     8,     9 ]
 
 racc_action_pointer = [
-    -3,    -1,     2,   nil,   nil,   nil,    -1,     4,   nil,   nil ]
+    -1,   nil,    -2,     3,   nil,   nil,   nil,   nil,    -1,     6,
+   nil,   nil ]
 
 racc_action_default = [
-    -2,    -6,    -6,    -1,    -5,    -3,    -6,    -6,    -4,    10 ]
+    -2,    -7,    -8,    -8,    -1,    -3,    -4,    -5,    -8,    -8,
+    -6,    12 ]
 
 racc_goto_table = [
-     2,     3,     6,     4 ]
+     3,     4,     8,     1 ]
 
 racc_goto_check = [
      1,     2,     3,     4 ]
 
 racc_goto_pointer = [
-   nil,     0,     1,     1,     3 ]
+   nil,     0,     1,     0,     3 ]
 
 racc_goto_default = [
    nil,   nil,   nil,   nil,   nil ]
 
 racc_reduce_table = [
   0, 0, :racc_error,
-  1, 6, :_reduce_none,
-  0, 6, :_reduce_2,
-  1, 8, :_reduce_3,
-  3, 9, :_reduce_4,
-  1, 7, :_reduce_5 ]
+  1, 8, :_reduce_none,
+  0, 8, :_reduce_2,
+  1, 10, :_reduce_3,
+  1, 10, :_reduce_4,
+  1, 10, :_reduce_5,
+  3, 11, :_reduce_6,
+  1, 9, :_reduce_7 ]
 
-racc_reduce_n = 6
+racc_reduce_n = 8
 
-racc_shift_n = 10
+racc_shift_n = 12
 
 racc_token_table = {
   false => 0,
   :error => 1,
   :INTEGER => 2,
-  :VAR_OPEN => 3,
-  :VAR_CLOSE => 4 }
+  :REAL => 3,
+  :STRING => 4,
+  :VAR_OPEN => 5,
+  :VAR_CLOSE => 6 }
 
-racc_nt_base = 5
+racc_nt_base = 7
 
 racc_use_result_var = true
 
@@ -102,6 +108,8 @@ Racc_token_to_s_table = [
   "$end",
   "error",
   "INTEGER",
+  "REAL",
+  "STRING",
   "VAR_OPEN",
   "VAR_CLOSE",
   "$start",
@@ -132,15 +140,29 @@ module_eval(<<'.,.,', 'cadenza.y', 9)
   end
 .,.,
 
-module_eval(<<'.,.,', 'cadenza.y', 13)
+module_eval(<<'.,.,', 'cadenza.y', 10)
   def _reduce_4(val, _values, result)
+     result = ConstantNode.new(val[0].value) 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'cadenza.y', 11)
+  def _reduce_5(val, _values, result)
+     result = ConstantNode.new(val[0].value) 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'cadenza.y', 15)
+  def _reduce_6(val, _values, result)
      result = InjectNode.new(val[1]) 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'cadenza.y', 17)
-  def _reduce_5(val, _values, result)
+module_eval(<<'.,.,', 'cadenza.y', 19)
+  def _reduce_7(val, _values, result)
      @document.children.push(val[0]) 
     result
   end

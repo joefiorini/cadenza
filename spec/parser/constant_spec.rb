@@ -7,4 +7,12 @@ describe Cadenza::Parser, 'constant nodes' do
     parser.parse("integer.lex.yml").should have_an_identical_syntax_tree_to "integer.parse.yml"
   end
 
+  it "should parse a real token into a constant node" do
+    parser.parse("real.lex.yml").should have_an_identical_syntax_tree_to "real.parse.yml"
+  end
+
+  it "should parse a string token into a constant node" do
+    parser.parse("string.lex.yml").should have_an_identical_syntax_tree_to "string.parse.yml"
+  end
+
 end

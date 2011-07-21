@@ -8,6 +8,8 @@ rule
 
   primary_expression:
     : INTEGER { result = ConstantNode.new(val[0].value) }
+    | REAL    { result = ConstantNode.new(val[0].value) }
+    | STRING  { result = ConstantNode.new(val[0].value) }
     ;
 
   inject_statement:

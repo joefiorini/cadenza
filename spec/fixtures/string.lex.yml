@@ -1,0 +1,16 @@
+# {{ Foo }}
+
+- type: VAR_OPEN
+  value: "{{"
+  line: 1
+  column: 1
+
+- type: STRING
+  value: Foo
+  line: 1
+  column: 4
+
+- type: VAR_CLOSE
+  value: "}}"
+  line: 1
+  column: 8
