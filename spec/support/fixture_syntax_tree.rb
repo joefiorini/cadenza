@@ -17,6 +17,7 @@ private
       when "DocumentNode" then parse_document_node(node)
       when "ConstantNode" then parse_constant_node(node)
       when "InjectNode"   then parse_inject_node(node)
+      when "VariableNode" then parse_variable_node(node)
       else raise "unknown type: #{type}"
     end
   end
@@ -42,6 +43,10 @@ private
     value_node = node["value"][value_type]
     
     Cadenza::InjectNode.new(parse_fixture(value_type, value_node))
+  end
+
+  def parse_variable_node(node)
+    Cadenza::VariableNode.new(node["value"])
   end
 
 end

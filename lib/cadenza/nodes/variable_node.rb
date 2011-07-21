@@ -1,11 +1,10 @@
-# module Cadenza  
-#   class VariableNode < Cadenza::Node
-#     attr_accessor :identifier
-    
-#     def initialize(identifier, pos)
-#       super(pos)
-#       self.identifier = identifier.value
-#     end
+module Cadenza  
+  class VariableNode# < Cadenza::Node
+    attr_accessor :identifier
+
+    def initialize(identifier)
+      self.identifier = identifier
+    end
     
 #     def implied_globals
 #       [self.identifier]
@@ -28,9 +27,9 @@
 #       end
 #     end
     
-#     def ==(rhs)
-#       super(rhs) and self.identifier == rhs.identifier
-#     end
+    def ==(rhs)
+      self.identifier == rhs.identifier
+    end
     
 #     def to_s
 #       "VariableNode(identifier:#{self.identifier})"
@@ -85,5 +84,5 @@
 #       return prev[array_index]
 #     end
     
-#   end
-# end
+  end
+end
