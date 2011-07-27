@@ -16,6 +16,7 @@ rule
   additive_expression:
     : primary_expression
     | additive_expression '+' primary_expression { result = ArithmeticNode.new(val[0], "+", val[2]) }
+    | additive_expression '-' primary_expression { result = ArithmeticNode.new(val[0], "-", val[2]) }
     ;
 
   inject_statement:
