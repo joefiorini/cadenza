@@ -19,4 +19,13 @@ describe Cadenza::InjectNode do
     inject_a.should == inject_b
   end
 
+  it "should accept an optional filter list in it's constructor" do
+    constant = Cadenza::VariableNode.new("name")
+    filter = Cadenza::FilterNode.new("trim")
+
+    inject = Cadenza::InjectNode.new(constant, [filter])
+
+    inject.filters.should == [filter]
+  end
+
 end

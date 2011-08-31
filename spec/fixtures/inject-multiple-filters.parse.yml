@@ -1,0 +1,10 @@
+# should be the result of parsing "{{ name | trim | upcase }}"
+DocumentNode:
+  children:
+    - InjectNode:
+        value:
+          VariableNode:
+            value: name
+        filters:
+          - identifier: trim
+          - identifier: upcase

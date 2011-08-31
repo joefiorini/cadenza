@@ -11,7 +11,7 @@ require 'racc/parser.rb'
 module Cadenza
   class Parser < Racc::Parser
 
-module_eval(<<'...end cadenza.y/module_eval...', 'cadenza.y', 41)
+module_eval(<<'...end cadenza.y/module_eval...', 'cadenza.y', 57)
 attr_reader :lexer
 
 def initialize(options={})
@@ -36,62 +36,81 @@ end
 ##### State transition tables begin ###
 
 racc_action_table = [
-    21,    18,    19,    17,    15,     5,     6,     7,     8,    10,
-     5,     6,     7,     8,    10,     5,     6,     7,     8,    10,
-     5,     6,     7,     8,    10,     5,     6,     7,     8,    10,
-     5,     6,     7,     8,    10,    17,    15,    20,    16,    18,
-    19,    18,    19,    13,     1 ]
+    20,    17,    27,    31,    18,    32,    19,     6,     7,     8,
+     9,    10,     6,     7,     8,     9,    10,     6,     7,     8,
+     9,    10,     6,     7,     8,     9,    10,     6,     7,     8,
+     9,    10,     6,     7,     8,     9,    10,     6,     7,     8,
+     9,    10,     6,     7,     8,     9,    10,    24,    20,    17,
+    20,    17,    14,    15,    14,    15,    14,    15,    20,    17,
+    30,    27,    36,    21,    13,     2 ]
 
 racc_action_check = [
-    14,    22,    22,    14,    14,     1,     1,     1,     1,     1,
-    15,    15,    15,    15,    15,    10,    10,    10,    10,    10,
-    18,    18,    18,    18,    18,    19,    19,    19,    19,    19,
-    17,    17,    17,    17,    17,    11,    11,    13,    11,    12,
-    12,    23,    23,     2,     0 ]
+    12,    12,    18,    28,    12,    28,    12,    15,    15,    15,
+    15,    15,    36,    36,    36,    36,    36,    20,    20,    20,
+    20,    20,    10,    10,    10,    10,    10,     2,     2,     2,
+     2,     2,    30,    30,    30,    30,    30,    14,    14,    14,
+    14,    14,    17,    17,    17,    17,    17,    16,    34,    34,
+    16,    16,     5,     5,    25,    25,    29,    29,    37,    37,
+    27,    31,    33,    13,     3,     0 ]
 
 racc_action_pointer = [
-    32,     3,    43,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
-    13,    25,    31,    37,    -7,     8,   nil,    28,    18,    23,
-   nil,   nil,    -7,    33,   nil,   nil ]
+    50,   nil,    25,    64,   nil,    44,   nil,   nil,   nil,   nil,
+    20,   nil,   -10,    63,    35,     5,    40,    40,     0,   nil,
+    15,   nil,   nil,   nil,   nil,    46,   nil,    47,   -11,    48,
+    30,    59,   nil,    50,    38,   nil,    10,    48 ]
 
 racc_action_default = [
-    -2,   -16,   -16,    -1,   -15,    -3,    -4,    -5,    -6,    -8,
-   -16,   -16,   -11,   -16,   -16,   -16,   -14,   -16,   -16,   -16,
-    26,    -7,   -13,   -12,    -9,   -10 ]
+    -2,   -22,   -23,   -23,    -1,   -11,    -3,    -4,    -5,    -6,
+   -23,    -8,   -23,   -23,   -23,   -23,   -23,   -23,   -23,   -20,
+   -23,    38,    -9,   -10,    -7,   -13,   -18,   -16,   -23,   -12,
+   -23,   -23,   -21,   -17,   -14,   -19,   -23,   -15 ]
 
 racc_goto_table = [
-    11,    22,     2,    23,    24,    25,     3,     4,   nil,    14 ]
+    12,    26,    25,    22,    23,    29,     3,    33,    16,     4,
+    28,     1,   nil,   nil,    35,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,    34,   nil,
+   nil,   nil,   nil,   nil,    37 ]
 
 racc_goto_check = [
-     4,     5,     1,     5,     3,     3,     2,     6,   nil,     4 ]
+     4,     7,     5,     3,     3,     5,     1,     6,     4,     2,
+     8,     9,   nil,   nil,     7,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,     4,   nil,
+   nil,   nil,   nil,   nil,     4 ]
 
 racc_goto_pointer = [
-   nil,     2,     6,   -14,    -1,   -14,     7 ]
+   nil,     6,     9,   -11,    -2,   -15,   -23,   -17,    -8,    11 ]
 
 racc_goto_default = [
-   nil,   nil,   nil,     9,   nil,    12,   nil ]
+   nil,   nil,   nil,    11,   nil,     5,   nil,   nil,   nil,   nil ]
 
 racc_reduce_table = [
   0, 0, :racc_error,
-  1, 15, :_reduce_none,
-  0, 15, :_reduce_2,
-  1, 17, :_reduce_3,
-  1, 17, :_reduce_4,
-  1, 17, :_reduce_5,
-  1, 17, :_reduce_6,
-  3, 17, :_reduce_7,
-  1, 19, :_reduce_none,
-  3, 19, :_reduce_9,
-  3, 19, :_reduce_10,
   1, 18, :_reduce_none,
-  3, 18, :_reduce_12,
-  3, 18, :_reduce_13,
-  3, 20, :_reduce_14,
-  1, 16, :_reduce_15 ]
+  0, 18, :_reduce_2,
+  1, 20, :_reduce_3,
+  1, 20, :_reduce_4,
+  1, 20, :_reduce_5,
+  1, 20, :_reduce_6,
+  3, 20, :_reduce_7,
+  1, 22, :_reduce_none,
+  3, 22, :_reduce_9,
+  3, 22, :_reduce_10,
+  1, 21, :_reduce_none,
+  3, 21, :_reduce_12,
+  3, 21, :_reduce_13,
+  1, 23, :_reduce_14,
+  3, 23, :_reduce_15,
+  1, 24, :_reduce_16,
+  3, 24, :_reduce_17,
+  1, 25, :_reduce_18,
+  3, 25, :_reduce_19,
+  3, 26, :_reduce_20,
+  5, 26, :_reduce_21,
+  1, 19, :_reduce_22 ]
 
-racc_reduce_n = 16
+racc_reduce_n = 23
 
-racc_shift_n = 26
+racc_shift_n = 38
 
 racc_token_table = {
   false => 0,
@@ -106,10 +125,13 @@ racc_token_table = {
   "/" => 9,
   "+" => 10,
   "-" => 11,
-  :VAR_OPEN => 12,
-  :VAR_CLOSE => 13 }
+  "," => 12,
+  ":" => 13,
+  "|" => 14,
+  :VAR_OPEN => 15,
+  :VAR_CLOSE => 16 }
 
-racc_nt_base = 14
+racc_nt_base = 17
 
 racc_use_result_var = true
 
@@ -142,6 +164,9 @@ Racc_token_to_s_table = [
   "\"/\"",
   "\"+\"",
   "\"-\"",
+  "\",\"",
+  "\":\"",
+  "\"|\"",
   "VAR_OPEN",
   "VAR_CLOSE",
   "$start",
@@ -150,6 +175,9 @@ Racc_token_to_s_table = [
   "primary_expression",
   "additive_expression",
   "multiplicative_expression",
+  "parameter_list",
+  "filter",
+  "filter_list",
   "inject_statement" ]
 
 Racc_debug_parser = false
@@ -236,13 +264,62 @@ module_eval(<<'.,.,', 'cadenza.y', 25)
 
 module_eval(<<'.,.,', 'cadenza.y', 29)
   def _reduce_14(val, _values, result)
+     result = [val[0]] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'cadenza.y', 30)
+  def _reduce_15(val, _values, result)
+     result = val[0].push(val[2]) 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'cadenza.y', 34)
+  def _reduce_16(val, _values, result)
+     result = FilterNode.new(val[0].value) 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'cadenza.y', 35)
+  def _reduce_17(val, _values, result)
+     result = FilterNode.new(val[0].value, val[1]) 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'cadenza.y', 39)
+  def _reduce_18(val, _values, result)
+     result = [val[0]] 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'cadenza.y', 40)
+  def _reduce_19(val, _values, result)
+     result = val[0].push(val[2]) 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'cadenza.y', 44)
+  def _reduce_20(val, _values, result)
      result = InjectNode.new(val[1]) 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'cadenza.y', 33)
-  def _reduce_15(val, _values, result)
+module_eval(<<'.,.,', 'cadenza.y', 45)
+  def _reduce_21(val, _values, result)
+     result = InjectNode.new(val[1], val[3]) 
+    result
+  end
+.,.,
+
+module_eval(<<'.,.,', 'cadenza.y', 49)
+  def _reduce_22(val, _values, result)
      @document.children.push(val[0]) 
     result
   end

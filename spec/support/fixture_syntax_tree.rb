@@ -42,8 +42,21 @@ private
   def parse_inject_node(node)
     value_type = node["value"].keys.first
     value_node = node["value"][value_type]
+
+    filters = (node["filters"] || []).map do |filter_def|
+      identifier = filter_def["identifier"]
+
+      parameters = (filter_def["parameters"] || []).map do |param_def|
+        type = param_def.keys.first
+        node = param_def[type]
+
+        parse_fixture(type, node)
+      end
+
+      Cadenza::FilterNode.new(identifier, parameters)
+    end
     
-    Cadenza::InjectNode.new(parse_fixture(value_type, value_node))
+    Cadenza::InjectNode.new(parse_fixture(value_type, value_node), filters)
   end
 
   def parse_variable_node(node)

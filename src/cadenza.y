@@ -26,8 +26,24 @@ rule
     | additive_expression '-' multiplicative_expression { result = ArithmeticNode.new(val[0], "-", val[2]) }
     ;
 
+  parameter_list:
+    : additive_expression                     { result = [val[0]] }
+    | parameter_list ',' additive_expression  { result = val[0].push(val[2]) }
+    ;
+
+  filter:
+    : IDENTIFIER                    { result = FilterNode.new(val[0].value) }
+    | IDENTIFIER ':' parameter_list { result = FilterNode.new(val[0].value, val[1]) }
+    ;
+
+  filter_list:
+    : filter { result = [val[0]] }
+    | filter_list '|' filter { result = val[0].push(val[2]) }
+    ;
+
   inject_statement:
     : VAR_OPEN additive_expression VAR_CLOSE { result = InjectNode.new(val[1]) }
+    | VAR_OPEN additive_expression '|' filter_list VAR_CLOSE { result = InjectNode.new(val[1], val[3]) }
     ;
 
   document:

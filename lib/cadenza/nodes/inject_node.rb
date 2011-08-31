@@ -1,10 +1,10 @@
 module Cadenza
   class InjectNode# < Cadenza::Node
-    attr_accessor :value
-#     attr_accessor :identifier, :filters
+    attr_accessor :value, :filters
     
-    def initialize(value)
-      self.value = value
+    def initialize(value, filters=[])
+      @value = value
+      @filters = filters
     end
 
     def ==(rhs)
