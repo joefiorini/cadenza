@@ -11,12 +11,19 @@ rule
     | INTEGER    { result = ConstantNode.new(val[0].value) }
     | REAL       { result = ConstantNode.new(val[0].value) }
     | STRING     { result = ConstantNode.new(val[0].value) }
+    | '(' additive_expression ')'  { result = val[1] }
+    ;
+
+  multiplicative_expression:
+    : primary_expression
+    | multiplicative_expression '*' primary_expression { result = ArithmeticNode.new(val[0], "*", val[2]) }
+    | multiplicative_expression '/' primary_expression { result = ArithmeticNode.new(val[0], "/", val[2]) }
     ;
 
   additive_expression:
-    : primary_expression
-    | additive_expression '+' primary_expression { result = ArithmeticNode.new(val[0], "+", val[2]) }
-    | additive_expression '-' primary_expression { result = ArithmeticNode.new(val[0], "-", val[2]) }
+    : multiplicative_expression
+    | additive_expression '+' multiplicative_expression { result = ArithmeticNode.new(val[0], "+", val[2]) }
+    | additive_expression '-' multiplicative_expression { result = ArithmeticNode.new(val[0], "-", val[2]) }
     ;
 
   inject_statement:

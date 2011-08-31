@@ -15,4 +15,20 @@ describe Cadenza::Parser, "arithmetic parsing" do
     parser.parse("{{ a - b }}").should have_an_identical_syntax_tree_to "subtractive_expression.parse.yml"
   end
 
+  it "should parse a multiplicative expression" do
+    parser.parse("{{ a * b }}").should have_an_identical_syntax_tree_to "multiplicative_expression.parse.yml"
+  end
+
+  it 'should parse a division expression' do
+    parser.parse("{{ a / b }}").should have_an_identical_syntax_tree_to "division_expression.parse.yml"
+  end
+
+  it 'should parse a complex arithmetic expression using proper order of operations without brackets' do
+    parser.parse("{{ a + b * c }}").should have_an_identical_syntax_tree_to "complex_expression.parse.yml"
+  end
+
+  it 'should give precedence to brackets' do
+    parser.parse("{{ (a + b) * c }}").should have_an_identical_syntax_tree_to "brackets_expression.parse.yml"
+  end
+
 end
