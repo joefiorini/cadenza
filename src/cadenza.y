@@ -46,8 +46,14 @@ rule
     | VAR_OPEN additive_expression '|' filter_list VAR_CLOSE { result = InjectNode.new(val[1], val[3]) }
     ;
 
+  document_component:
+    : TEXT_BLOCK { result = TextNode.new(val[0].value) }
+    | inject_statement
+    ;
+
   document:
-    : inject_statement { @document.children.push(val[0]) }
+    : document_component { @document.children.push(val[0]) }
+    | document document_component { @document.children.push(val[1]) }
     ;
 
 ---- header ----

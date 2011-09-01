@@ -19,6 +19,7 @@ private
       when "InjectNode"   then parse_inject_node(node)
       when "VariableNode" then parse_variable_node(node)
       when "ArithmeticNode" then parse_arithmetic_node(node)
+      when "TextNode" then parse_text_node(node)
       else raise "unknown type: #{type}"
     end
   end
@@ -71,6 +72,12 @@ private
     right_node = parse_fixture(right_type, node["right"][right_type])
 
     Cadenza::ArithmeticNode.new(left_node, node["operator"], right_node)
+  end
+
+  def parse_text_node(node)
+    text = node["text"]
+
+    Cadenza::TextNode.new(text)
   end
 
 end
