@@ -11,7 +11,7 @@ rule
     | INTEGER    { result = ConstantNode.new(val[0].value) }
     | REAL       { result = ConstantNode.new(val[0].value) }
     | STRING     { result = ConstantNode.new(val[0].value) }
-    | '(' additive_expression ')'  { result = val[1] }
+    | '(' boolean_expression ')'  { result = val[1] }
     ;
 
   multiplicative_expression:
@@ -26,9 +26,19 @@ rule
     | additive_expression '-' multiplicative_expression { result = ArithmeticNode.new(val[0], "-", val[2]) }
     ;
 
+  boolean_expression:
+    : additive_expression
+    | boolean_expression OP_EQ additive_expression { result = BooleanNode.new(val[0], "==", val[2]) }
+    | boolean_expression OP_NEQ additive_expression { result = BooleanNode.new(val[0], "!=", val[2]) }
+    | boolean_expression OP_LEQ additive_expression { result = BooleanNode.new(val[0], "<=", val[2]) }
+    | boolean_expression OP_GEQ additive_expression { result = BooleanNode.new(val[0], ">=", val[2]) }
+    | boolean_expression '>' additive_expression  { result = BooleanNode.new(val[0], ">", val[2]) }
+    | boolean_expression '<' additive_expression  { result = BooleanNode.new(val[0], "<", val[2]) }
+    ;
+
   parameter_list:
-    : additive_expression                     { result = [val[0]] }
-    | parameter_list ',' additive_expression  { result = val[0].push(val[2]) }
+    : boolean_expression                     { result = [val[0]] }
+    | parameter_list ',' boolean_expression  { result = val[0].push(val[2]) }
     ;
 
   filter:
@@ -42,8 +52,8 @@ rule
     ;
 
   inject_statement:
-    : VAR_OPEN additive_expression VAR_CLOSE { result = InjectNode.new(val[1]) }
-    | VAR_OPEN additive_expression '|' filter_list VAR_CLOSE { result = InjectNode.new(val[1], val[3]) }
+    : VAR_OPEN boolean_expression VAR_CLOSE { result = InjectNode.new(val[1]) }
+    | VAR_OPEN boolean_expression '|' filter_list VAR_CLOSE { result = InjectNode.new(val[1], val[3]) }
     ;
 
   document_component:

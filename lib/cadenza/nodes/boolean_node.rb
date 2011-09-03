@@ -1,15 +1,13 @@
-# module Cadenza
-#   class BooleanNode < Cadenza::Node
-#     attr_accessor :left, :right, :op
-    
-#     def initialize(left,right,op,pos)
-#       super(pos)
-      
-#       self.left = left
-#       self.right = right
-#       self.op = op
-#     end
-    
+module Cadenza
+  class BooleanNode #< Cadenza::Node
+      attr_accessor :left, :right, :operator
+
+      def initialize(left, operator, right)
+         @left = left
+         @right = right
+         @operator = operator
+      end
+          
 #     def implied_globals
 #       left.implied_globals | right.implied_globals
 #     end
@@ -42,16 +40,15 @@
 #           return l < r
 #       end
 #     end
-    
-#     def ==(rhs)
-#       super(rhs) and
-#       self.left == rhs.left and
-#       self.right == rhs.right and
-#       self.op == rhs.op
-#     end
+
+      def ==(rhs)
+         @operator == rhs.operator and
+         @left == rhs.left and
+         @right == rhs.right
+      end
     
 #     def to_s
 #       "BooleanNode" << TAB << self.left.to_s.gsub(/\n/,TAB) << TAB << self.op << TAB << self.right.to_s.gsub(/\n/,TAB)
 #     end
-#   end
-# end
+  end
+end
