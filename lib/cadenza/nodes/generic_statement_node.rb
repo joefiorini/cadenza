@@ -1,12 +1,11 @@
-# module Cadenza
-#   class GenericStatementNode < Node
-#     attr_accessor :statement_name, :parameters
-    
-#     def initialize(statement_name, parameters, pos)
-#       super(pos)
-#       self.statement_name = statement_name
-#       self.parameters = parameters
-#     end
+module Cadenza
+   class GenericStatementNode #< Node
+      attr_accessor :name, :parameters
+
+      def initialize(name, parameters=[])
+         @name = name
+         @parameters = parameters
+      end
     
 #     def implied_globals
 #       parameters.map(&:implied_globals).flatten.uniq
@@ -37,11 +36,10 @@
 #       stream << value.to_s
 #       return value.to_s
 #     end
-    
-#     def ==(rhs)
-#       super(rhs) and
-#       self.statement_name == rhs.statement_name and
-#       self.paramters == rhs.parameters
-#     end
-#   end
-# end
+      def ==(rhs)
+         @name == rhs.name and
+         @parameters == rhs.parameters
+      end
+
+   end
+end

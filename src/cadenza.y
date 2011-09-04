@@ -108,6 +108,11 @@ rule
     : STMT_OPEN RENDER STRING STMT_CLOSE { result = RenderNode.new(val[2].value) }
     | STMT_OPEN RENDER IDENTIFIER STMT_CLOSE { result = RenderNode.new(VariableNode.new(val[2].value)) }
     ;
+
+  generic_statement
+    : STMT_OPEN IDENTIFIER STMT_CLOSE { result = GenericStatementNode.new(val[1].value) }
+    | STMT_OPEN IDENTIFIER parameter_list STMT_CLOSE { result = GenericStatementNode.new(val[1].value, val[2]) }
+    ;
     
   document_component:
     : TEXT_BLOCK { result = TextNode.new(val[0].value) }
@@ -116,6 +121,7 @@ rule
     | for_block
     | block_block
     | render_statement
+    | generic_statement
     ;
 
   document:
