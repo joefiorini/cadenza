@@ -103,6 +103,11 @@ rule
     : STMT_OPEN EXTENDS STRING STMT_CLOSE { result = val[2].value }
     | STMT_OPEN EXTENDS IDENTIFIER STMT_CLOSE { result = VariableNode.new(val[2].value) }
     ;
+
+  render_statement
+    : STMT_OPEN RENDER STRING STMT_CLOSE { result = RenderNode.new(val[2].value) }
+    | STMT_OPEN RENDER IDENTIFIER STMT_CLOSE { result = RenderNode.new(VariableNode.new(val[2].value)) }
+    ;
     
   document_component:
     : TEXT_BLOCK { result = TextNode.new(val[0].value) }
@@ -110,6 +115,7 @@ rule
     | if_block
     | for_block
     | block_block
+    | render_statement
     ;
 
   document:

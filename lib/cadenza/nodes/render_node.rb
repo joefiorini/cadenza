@@ -1,12 +1,10 @@
-# module Cadenza
-#   class RenderNode < Node
-#     attr_accessor :filename, :locals
-    
-#     def initialize(filename, locals, pos)
-#       super(pos)
-#       self.filename = filename
-#       self.locals = locals
-#     end
+module Cadenza
+   class RenderNode #< Node
+      attr_accessor :filename
+      
+      def initialize(filename)
+         @filename = filename
+      end
     
 #     #
 #     # Returns an empty list (for now).  In the future this will return all
@@ -28,16 +26,14 @@
       
 #       return template.render(new_context, stream)
 #     end
-    
-#     def ==(rhs)
-#       super(rhs) and
-#       self.filename == rhs.filename and
-#       self.locals == rhs.locals
-#     end
+
+      def ==(rhs)
+         @filename == rhs.filename
+      end
     
 #     def to_s
 #       "RenderNode" << TAB << "Filename: #{self.filename}" << TAB << "Locals: #{self.locals.inspect}"
 #     end
     
-#   end
-# end
+   end
+end
