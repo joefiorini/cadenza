@@ -32,6 +32,11 @@ private
   def parse_document_node(node)
     parsed_node = Cadenza::DocumentNode.new
     parsed_node.children = list_for_key(node, "children")
+
+    if node.has_key?("extends")
+      parsed_node.extends = node["extends"].is_a?(String) ? node["extends"] : node_for_key(node, "extends")
+    end
+    
     parsed_node
   end
 

@@ -1,6 +1,6 @@
 module Cadenza
   class DocumentNode #< Cadenza::Node
-#     attr_accessor :extends
+    attr_accessor :extends
     attr_accessor :children
     # attr_accessor :blocks
     
@@ -11,7 +11,8 @@ module Cadenza
     end
 
     def ==(rhs)
-      self.children == rhs.children
+      @children == rhs.children and
+      @extends == rhs.extends
     end
     
 #     #

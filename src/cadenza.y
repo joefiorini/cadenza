@@ -98,6 +98,11 @@ rule
       STMT_OPEN ENDBLOCK STMT_CLOSE
       { result = BlockNode.new(val[2].value, @stack.pop.children) }
     ;
+
+  extends_statement
+    : STMT_OPEN EXTENDS STRING STMT_CLOSE { result = val[2].value }
+    | STMT_OPEN EXTENDS IDENTIFIER STMT_CLOSE { result = VariableNode.new(val[2].value) }
+    ;
     
   document_component:
     : TEXT_BLOCK { result = TextNode.new(val[0].value) }
@@ -110,6 +115,8 @@ rule
   document:
     : document_component { push_child val[0] }
     | document document_component { push_child val[1] }
+    | extends_statement  { @stack.first.extends = val[0] }
+    | document extends_statement { @stack.first.extends = val[1] }
     ;
 
 ---- header ----
