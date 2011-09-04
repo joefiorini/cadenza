@@ -6,9 +6,12 @@ DocumentNode:
             VariableNode:
                value: name
          filters:
-            - identifier: somefilter
-              parameters:
-                 - ConstantNode:
-                    value: foo
-                 - ConstantNode:
-                    value: 3.14159
+            - FilterNode:
+                identifier: 
+                  VariableNode:
+                    value: somefilter
+                parameters:
+                  - ConstantNode:
+                      value: foo
+                  - ConstantNode:
+                      value: 3.14159

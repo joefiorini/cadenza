@@ -17,6 +17,7 @@ private
       when "DocumentNode" then parse_document_node(node)
       when "ConstantNode" then parse_constant_node(node)
       when "InjectNode"   then parse_inject_node(node)
+      when "FilterNode" then parse_filter_node(node)
       when "VariableNode" then parse_variable_node(node)
       when "ArithmeticNode" then parse_arithmetic_node(node)
       when "BooleanNode" then parse_boolean_node(node)
@@ -29,13 +30,7 @@ private
 
   def parse_document_node(node)
     parsed_node = Cadenza::DocumentNode.new
-
-    parsed_node.children = node["children"].map do |child|
-      type = child.keys.first
-      node = child[type]
-      parse_fixture(type, node)
-    end
-
+    parsed_node.children = list_for_key(node, "children")
     parsed_node
   end
 
@@ -44,23 +39,17 @@ private
   end
 
   def parse_inject_node(node)
-    value_type = node["value"].keys.first
-    value_node = node["value"][value_type]
-
-    filters = (node["filters"] || []).map do |filter_def|
-      identifier = filter_def["identifier"]
-
-      parameters = (filter_def["parameters"] || []).map do |param_def|
-        type = param_def.keys.first
-        node = param_def[type]
-
-        parse_fixture(type, node)
-      end
-
-      Cadenza::FilterNode.new(identifier, parameters)
-    end
+    value = node_for_key(node, "value")
+    filters = list_for_key(node, "filters")
     
-    Cadenza::InjectNode.new(parse_fixture(value_type, value_node), filters)
+    Cadenza::InjectNode.new(value, filters)
+  end
+
+  def parse_filter_node(node)
+    identifier = node_for_key(node, "identifier")
+    parameters = list_for_key(node, "parameters")
+    
+    Cadenza::FilterNode.new(identifier, parameters)
   end
 
   def parse_variable_node(node)
@@ -68,64 +57,51 @@ private
   end
 
   def parse_boolean_node(node)
-    left_type = node["left"].keys.first
-    left_node = parse_fixture(left_type, node["left"][left_type])
+    left = node_for_key(node, "left")
+    right = node_for_key(node, "right")
 
-    right_type = node["right"].keys.first
-    right_node = parse_fixture(right_type, node["right"][right_type])
-
-    Cadenza::BooleanNode.new(left_node, node["operator"], right_node)
+    Cadenza::BooleanNode.new(left, node["operator"], right)
   end
 
   def parse_arithmetic_node(node)
-    left_type = node["left"].keys.first
-    left_node = parse_fixture(left_type, node["left"][left_type])
+    left = node_for_key(node, "left")
+    right = node_for_key(node, "right")
 
-    right_type = node["right"].keys.first
-    right_node = parse_fixture(right_type, node["right"][right_type])
-
-    Cadenza::ArithmeticNode.new(left_node, node["operator"], right_node)
+    Cadenza::ArithmeticNode.new(left, node["operator"], right)
   end
 
   def parse_text_node(node)
-    text = node["text"]
-
-    Cadenza::TextNode.new(text)
+    Cadenza::TextNode.new(node["text"])
   end
 
   def parse_if_node(node)
-    expression_type = node["expression"].keys.first
-    expression_node = parse_fixture(expression_type, node["expression"][expression_type])
+    expression     = node_for_key(node, "expression")
+    true_children  = list_for_key(node, "true_children")
+    false_children = list_for_key(node, "false_children")
 
-    true_children = (node["true_children"] || []).map do |child|
-      type = child.keys.first
-      inner_node = child[type]
-      parse_fixture(type, inner_node)
-    end
-
-    false_children = (node["false_children"] || []).map do |child|
-      type = child.keys.first
-      inner_node = child[type]
-      parse_fixture(type, inner_node)
-    end
-
-    Cadenza::IfNode.new(expression_node, true_children, false_children)
+    Cadenza::IfNode.new(expression, true_children, false_children)
   end
 
   def parse_for_node(node)
-    iterator_type = node["iterator"].keys.first
-    iterator_node = parse_fixture(iterator_type, node["iterator"][iterator_type])
+    iterator = node_for_key(node, "iterator")
+    iterable = node_for_key(node, "iterable")
+    children = list_for_key(node, "children")
 
-    iterable_type = node["iterable"].keys.first
-    iterable_node = parse_fixture(iterator_type, node["iterable"][iterable_type])
+    Cadenza::ForNode.new(iterator, iterable, children)
+  end
 
-    children = (node["children"] || []).map do |child|
+private
+  def node_for_key(node, key)
+    type = node[key].keys.first
+    parse_fixture(type, node[key][type])
+  end
+
+  def list_for_key(node, key)
+    (node[key] || []).map do |child|
       type = child.keys.first
       inner_node = child[type]
       parse_fixture(type, inner_node)
     end
-
-    Cadenza::ForNode.new(iterator_node, iterable_node, children)
   end
 
 end

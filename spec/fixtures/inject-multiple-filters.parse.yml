@@ -6,5 +6,11 @@ DocumentNode:
           VariableNode:
             value: name
         filters:
-          - identifier: trim
-          - identifier: upcase
+          - FilterNode:
+               identifier: 
+                  VariableNode:
+                     value: trim
+          - FilterNode:
+               identifier: 
+                  VariableNode:
+                     value: upcase
