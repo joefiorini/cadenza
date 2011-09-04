@@ -1,13 +1,12 @@
-# module Cadenza
-#   class IfNode < Cadenza::Node
-#     attr_accessor :expression, :true_children, :false_children
-    
-#     def initialize(expression,true_children,false_children,pos)
-#       super(pos)
-#       self.expression = expression
-#       self.true_children  = true_children || []
-#       self.false_children = false_children || []
-#     end
+module Cadenza
+  class IfNode #< Cadenza::Node
+   attr_accessor :expression, :true_children, :false_children
+
+   def initialize(expression, true_children=[], false_children=[])
+      @expression = expression
+      @true_children = true_children
+      @false_children = false_children
+   end
     
 #     def implied_globals
 #       expression.implied_globals | true_children.map(&:implied_globals).flatten | false_children.map(&:implied_globals).flatten
@@ -33,14 +32,13 @@
       
 #       return stream
 #     end
-    
-#     def ==(rhs)
-#       super(rhs) and
-#       self.expression == rhs.expression and
-#       self.true_children == rhs.true_children and
-#       self.false_children == rhs.false_children
-#     end
-    
+
+   def ==(rhs)
+      @expression == rhs.expression and
+      @true_children == rhs.true_children and
+      @false_children == rhs.false_children
+   end
+
 #     def to_s
 #       value = "IfNode" << TAB
       
@@ -63,5 +61,5 @@
       
 #       return value
 #     end
-#   end
-# end
+  end
+end

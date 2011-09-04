@@ -21,6 +21,7 @@ private
       when "ArithmeticNode" then parse_arithmetic_node(node)
       when "BooleanNode" then parse_boolean_node(node)
       when "TextNode" then parse_text_node(node)
+      when "IfNode" then parse_if_node(node)
       else raise "unknown type: #{type}"
     end
   end
@@ -89,6 +90,25 @@ private
     text = node["text"]
 
     Cadenza::TextNode.new(text)
+  end
+
+  def parse_if_node(node)
+    expression_type = node["expression"].keys.first
+    expression_node = parse_fixture(expression_type, node["expression"][expression_type])
+
+    true_children = (node["true_children"] || []).map do |child|
+      type = child.keys.first
+      inner_node = child[type]
+      parse_fixture(type, inner_node)
+    end
+
+    false_children = (node["false_children"] || []).map do |child|
+      type = child.keys.first
+      inner_node = child[type]
+      parse_fixture(type, inner_node)
+    end
+
+    Cadenza::IfNode.new(expression_node, true_children, false_children)
   end
 
 end
