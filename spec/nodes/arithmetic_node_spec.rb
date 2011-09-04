@@ -32,4 +32,15 @@ describe Cadenza::ArithmeticNode do
     Cadenza::ArithmeticNode.new(variable, "+", constant_a).should_not == Cadenza::ArithmeticNode.new(variable, "+", constant_b)
   end
 
+  it "should return the union of it's left and right nodes for implied globals" do
+    variable_a = Cadenza::VariableNode.new("a")
+    variable_b = Cadenza::VariableNode.new("b")
+
+    arithmetic_a = Cadenza::ArithmeticNode.new(variable_a, "+", variable_b)
+    arithmetic_b = Cadenza::ArithmeticNode.new(variable_a, "+", variable_a)
+
+    arithmetic_a.implied_globals.should == %w(a b)
+    arithmetic_b.implied_globals.should == %w(a)
+  end
+
 end

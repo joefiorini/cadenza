@@ -9,8 +9,8 @@ describe Cadenza::IfNode do
       one = Cadenza::ConstantNode.new(1)
       expression = Cadenza::BooleanNode.new(var, "==", one)
 
-      node_a = Cadenza::IfNode.new(expression, text_a, text_b)
-      node_b = Cadenza::IfNode.new(expression, text_a, text_b)
+      node_a = Cadenza::IfNode.new(expression, [text_a], [text_b])
+      node_b = Cadenza::IfNode.new(expression, [text_a], [text_b])
 
       node_a.should == node_b
    end
@@ -25,8 +25,8 @@ describe Cadenza::IfNode do
       expression_a = Cadenza::BooleanNode.new(var, "==", one)
       expression_b = Cadenza::BooleanNode.new(var, "==", two)
 
-      node_a = Cadenza::IfNode.new(expression_a, text_a, text_b)
-      node_b = Cadenza::IfNode.new(expression_b, text_a, text_b)
+      node_a = Cadenza::IfNode.new(expression_a, [text_a], [text_b])
+      node_b = Cadenza::IfNode.new(expression_b, [text_a], [text_b])
 
       node_a.should_not == node_b
    end
@@ -40,8 +40,8 @@ describe Cadenza::IfNode do
       one = Cadenza::ConstantNode.new(1)
       expression = Cadenza::BooleanNode.new(var, "==", one)
 
-      node_a = Cadenza::IfNode.new(expression, text_a, text_b)
-      node_b = Cadenza::IfNode.new(expression, text_c, text_b)
+      node_a = Cadenza::IfNode.new(expression, [text_a], text_b)
+      node_b = Cadenza::IfNode.new(expression, [text_c], [text_b])
 
       node_a.should_not == node_b
    end
@@ -55,8 +55,8 @@ describe Cadenza::IfNode do
       one = Cadenza::ConstantNode.new(1)
       expression = Cadenza::BooleanNode.new(var, "==", one)
 
-      node_a = Cadenza::IfNode.new(expression, text_a, text_b)
-      node_b = Cadenza::IfNode.new(expression, text_a, text_c)
+      node_a = Cadenza::IfNode.new(expression, [text_a], [text_b])
+      node_b = Cadenza::IfNode.new(expression, [text_a], [text_c])
 
       node_a.should_not == node_b
    end
@@ -70,5 +70,21 @@ describe Cadenza::IfNode do
 
       node.true_children.should == []
       node.false_children.should == []
+   end
+
+   it "should use the union of the expression's, true children's and false children's implied globals for it's own implied globals" do
+      variable_a = Cadenza::VariableNode.new("x")
+      variable_b = Cadenza::VariableNode.new("y")
+      variable_c = Cadenza::VariableNode.new("z")
+
+      inject_a = Cadenza::InjectNode.new(variable_a)
+      inject_b = Cadenza::InjectNode.new(variable_b)
+      inject_c = Cadenza::InjectNode.new(variable_c)
+
+      expression = Cadenza::BooleanNode.new(variable_a, "==", variable_b)
+
+      if_statement = Cadenza::IfNode.new(expression, [inject_c], [inject_a, inject_b, inject_c])
+
+      if_statement.implied_globals.should == %w(x y z)
    end
 end

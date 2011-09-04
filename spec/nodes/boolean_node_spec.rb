@@ -30,4 +30,15 @@ describe Cadenza::BooleanNode do
 
       Cadenza::BooleanNode.new(variable, "==", constant_a).should_not == Cadenza::BooleanNode.new(variable, "==", constant_b)
    end
+
+   it "should use the union of it's left and right node's implied globals for it's own implied globals" do
+      variable_a = Cadenza::VariableNode.new("a")
+      variable_b = Cadenza::VariableNode.new("b")
+
+      boolean_a = Cadenza::BooleanNode.new(variable_a, "==", variable_b)
+      boolean_b = Cadenza::BooleanNode.new(variable_a, "==", variable_a)
+
+      boolean_a.implied_globals.should == %w(a b)
+      boolean_b.implied_globals.should == %w(a)
+   end
 end

@@ -6,9 +6,9 @@
          @text = text
       end    
 
-#     def implied_globals
-#       []
-#     end
+      def implied_globals
+         []
+      end
     
 #     def render(context={}, stream='')
 #       stream << self.text

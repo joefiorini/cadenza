@@ -15,4 +15,8 @@ describe Cadenza::TextNode do
 
       text_a.should_not == text_b
    end
+
+   it "should return an empty list for implied globals" do
+      Cadenza::TextNode.new("foo").implied_globals.should == []
+   end
 end

@@ -10,10 +10,10 @@ module Cadenza
     def ==(rhs)
       self.value == rhs.value
     end
-    
-#     def implied_globals
-#       identifier.implied_globals | filters.map(&:params).flatten.map(&:implied_globals).flatten
-#     end
+
+    def implied_globals
+      (@value.implied_globals + @filters.map(&:implied_globals).flatten).uniq
+    end
     
 #     def render(context={}, stream='')
       

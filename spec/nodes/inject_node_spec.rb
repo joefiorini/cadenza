@@ -28,4 +28,17 @@ describe Cadenza::InjectNode do
     inject.filters.should == [filter]
   end
 
+  it "should return the value's implied globals unioned with the filters's implied globals (unique)" do
+    value = Cadenza::VariableNode.new("myvar")
+
+    filter_a = Cadenza::FilterNode.new("foo", [value])
+    filter_b = Cadenza::FilterNode.new("bar", [Cadenza::ConstantNode.new(3.14)])
+    filter_c = Cadenza::FilterNode.new("baz", [Cadenza::VariableNode.new("x"), Cadenza::VariableNode.new("y")])
+    filter_d = Cadenza::FilterNode.new("one", [Cadenza::VariableNode.new("y")])
+
+    inject = Cadenza::InjectNode.new(value, [filter_a, filter_b, filter_c, filter_d])
+
+    inject.implied_globals.should == %w(myvar x y)
+  end
+
 end

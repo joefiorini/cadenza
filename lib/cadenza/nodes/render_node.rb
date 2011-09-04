@@ -5,14 +5,10 @@ module Cadenza
       def initialize(filename)
          @filename = filename
       end
-    
-#     #
-#     # Returns an empty list (for now).  In the future this will return all
-#     # implied globals of the resolved template.
-#     #
-#     def implied_globals
-#       []
-#     end
+
+      def implied_globals
+         @filename.is_a?(VariableNode) ? @filename.implied_globals : []
+      end
     
 #     def render(context={}, stream='')
 #       template = Loader.get_template('Filesystem', self.filename.eval(context))

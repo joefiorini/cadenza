@@ -32,4 +32,15 @@ describe Cadenza::DocumentNode do
     @document_a.should_not == @document_b
   end
 
+  it "should use it's children's implied globals (unique) for its own implied_globals" do
+    @inject_a = Cadenza::InjectNode.new(Cadenza::VariableNode.new("x"))
+    @inject_b = Cadenza::InjectNode.new(Cadenza::VariableNode.new("y"))
+
+    @document_a = Cadenza::DocumentNode.new([@inject_a, @inject_b])
+    @document_b = Cadenza::DocumentNode.new([@inject_a, @inject_a])
+
+    @document_a.implied_globals.should == %w(x y)
+    @document_b.implied_globals.should == %w(x)
+  end
+
 end

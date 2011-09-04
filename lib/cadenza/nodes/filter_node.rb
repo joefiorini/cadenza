@@ -7,5 +7,9 @@ module Cadenza
          @identifier = identifier
          @parameters = parameters
       end
+
+      def implied_globals
+         @parameters.map(&:implied_globals).flatten.uniq
+      end
    end
 end

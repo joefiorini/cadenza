@@ -38,4 +38,15 @@ describe Cadenza::GenericStatementNode do
     statement.parameters.should == []
   end
 
+  it "should return a unique list of it's parameter's implied globals" do
+    param_a = Cadenza::VariableNode.new("bar")
+    param_b = Cadenza::VariableNode.new("baz")
+
+    statement_a = Cadenza::GenericStatementNode.new("foo", [param_a, param_b])
+    statement_b = Cadenza::GenericStatementNode.new("foo", [param_a, param_a])
+
+    statement_a.implied_globals.should == %w(bar baz)
+    statement_b.implied_globals.should == %w(bar)
+  end
+
 end

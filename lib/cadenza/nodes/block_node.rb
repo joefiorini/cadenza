@@ -14,9 +14,9 @@ module Cadenza
          @children = children
       end
 
-#     def implied_globals
-#       children.map(&:implied_globals).flatten
-#     end
+      def implied_globals
+         @children.map(&:implied_globals).flatten.uniq
+      end
     
 #     def render(context={}, stream='', is_super_call=false)
 #       unless is_super_call or self.overridden_by.nil?

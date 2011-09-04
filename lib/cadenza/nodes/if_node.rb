@@ -7,10 +7,10 @@ module Cadenza
       @true_children = true_children
       @false_children = false_children
    end
-    
-#     def implied_globals
-#       expression.implied_globals | true_children.map(&:implied_globals).flatten | false_children.map(&:implied_globals).flatten
-#     end
+
+   def implied_globals
+      (@expression.implied_globals + true_children.map(&:implied_globals).flatten + false_children.map(&:implied_globals).flatten).uniq
+   end
     
 #     def render(context={}, stream='')
 #       #TODO: i want to raise legitimate exceptions here, but if a method was undefined i want to

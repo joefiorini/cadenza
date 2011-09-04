@@ -25,9 +25,4 @@ namespace :spec do
     t.rspec_opts = ['--options', "spec/spec.opts"]
   end
 
-  desc "Run the Cadenza test suite for api tests"
-  RSpec::Core::RakeTask.new(:api) do |t|
-    t.pattern = FileList["spec/api/**/*_spec.rb"]
-    t.rspec_opts = ['--options', "spec/spec.opts"]
-  end
 end

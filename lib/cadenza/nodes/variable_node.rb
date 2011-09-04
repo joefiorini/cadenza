@@ -1,14 +1,14 @@
 module Cadenza  
-  class VariableNode
-    attr_accessor :identifier
+   class VariableNode
+      attr_accessor :identifier
 
-    def initialize(identifier)
-      self.identifier = identifier
-    end
-    
-#     def implied_globals
-#       [self.identifier]
-#     end
+      def initialize(identifier)
+         self.identifier = identifier
+      end
+
+      def implied_globals
+         [self.identifier]
+      end
     
 #     def render(context={}, stream='')
 #       stream << self.eval(context).to_s
@@ -26,10 +26,10 @@ module Cadenza
 #         return context[self.identifier]
 #       end
 #     end
-    
-    def ==(rhs)
-      self.identifier == rhs.identifier
-    end
+
+      def ==(rhs)
+         self.identifier == rhs.identifier
+      end
   
 #   private
 #     def eval_variable_path(context)

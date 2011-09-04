@@ -3,19 +3,20 @@ module Cadenza
     attr_accessor :left, :right, :operator
 
     def initialize(left, op, right)
-      self.left = left
-      self.right = right
-      self.operator = op
+      @left = left
+      @right = right
+      @operator = op
     end
 
     def ==(rhs)
-      self.operator == rhs.operator and
-      self.left == rhs.left and
-      self.right == rhs.right
+      @operator == rhs.operator and
+      @left == rhs.left and
+      @right == rhs.right
     end
-#     def implied_globals
-#       left.implied_globals | right.implied_globals
-#     end
+
+    def implied_globals
+      @left.implied_globals | @right.implied_globals
+    end
     
 #     def render(context={}, stream='')
 #       stream << self.eval(context).to_s

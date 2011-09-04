@@ -28,4 +28,15 @@ describe Cadenza::BlockNode do
 
     block_a.should_not == block_b
   end
+
+  it "should return a list of its children's unique implied globals" do
+    inject_a = Cadenza::InjectNode.new(Cadenza::VariableNode.new("a"))
+    inject_b = Cadenza::InjectNode.new(Cadenza::VariableNode.new("b"))
+
+    block_a = Cadenza::BlockNode.new("foo", [inject_a, inject_b])
+    block_b = Cadenza::BlockNode.new("foo", [inject_a, inject_a])
+
+    block_a.implied_globals.should == %w(a b)
+    block_b.implied_globals.should == %w(a)
+  end
 end
