@@ -1,5 +1,5 @@
 module Cadenza
-   class GenericStatementNode #< Node
+   class GenericStatementNode
       attr_accessor :name, :parameters
 
       def initialize(name, parameters=[])

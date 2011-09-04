@@ -1,5 +1,5 @@
  module Cadenza
-   class TextNode #< Cadenza::Node
+   class TextNode
       attr_accessor :text
 
       def initialize(text)
@@ -17,9 +17,5 @@
       def ==(rhs)
          @text == rhs.text
       end
-    
-#     def to_s
-#       "TextNode(text: #{self.text})"
-#     end
    end
  end

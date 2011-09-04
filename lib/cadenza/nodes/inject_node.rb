@@ -1,5 +1,5 @@
 module Cadenza
-  class InjectNode# < Cadenza::Node
+  class InjectNode
     attr_accessor :value, :filters
     
     def initialize(value, filters=[])
@@ -46,29 +46,6 @@ module Cadenza
 #       end
       
 #       stream << value.to_s
-#     end
-    
-#     def ==(rhs)
-#       super(rhs) and
-#       self.identifier == rhs.identifier and 
-#       self.filters == rhs.filters
-#     end
-    
-#     def to_s
-#       value = "InjectNode" << TAB << self.identifier.to_s.gsub(/\n/,TAB)
-      
-#       if filters.length > 0
-#         value << TAB << "<FILTERS>" << TAB
-#         filters.each do |filter|
-#           value << filter.identifier.value << TAB
-#           filter.params.each do | parameter |
-#             value << "   " << parameter.to_s.gsub(/\n/,TAB).gsub(/\n/,TAB) << TAB
-#           end
-#         end
-#         value.rstrip!
-#       end
-      
-#       return value
 #     end
   end
 end

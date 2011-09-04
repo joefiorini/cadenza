@@ -1,5 +1,5 @@
 module Cadenza  
-  class VariableNode# < Cadenza::Node
+  class VariableNode
     attr_accessor :identifier
 
     def initialize(identifier)
@@ -30,10 +30,6 @@ module Cadenza
     def ==(rhs)
       self.identifier == rhs.identifier
     end
-    
-#     def to_s
-#       "VariableNode(identifier:#{self.identifier})"
-#     end
   
 #   private
 #     def eval_variable_path(context)

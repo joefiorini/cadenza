@@ -5,7 +5,7 @@ module Cadenza
 #     end
 #   end
   
-   class BlockNode #< Cadenza::Node
+   class BlockNode
       attr_accessor :name, :children
 #     attr_accessor :overrides, :overridden_by
 
@@ -33,12 +33,5 @@ module Cadenza
          @name == rhs.name and
          @children == rhs.children
       end
-      
-#     def to_s
-#       value = "BlockNode(name: #{self.name})" << TAB
-#       self.children.each { |child| value << child.to_s.gsub(/\n/,TAB) << TAB }
-#       return value.rstrip
-#     end
-    
   end
 end

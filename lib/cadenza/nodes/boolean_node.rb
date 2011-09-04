@@ -1,5 +1,5 @@
 module Cadenza
-  class BooleanNode #< Cadenza::Node
+  class BooleanNode
       attr_accessor :left, :right, :operator
 
       def initialize(left, operator, right)
@@ -46,9 +46,5 @@ module Cadenza
          @left == rhs.left and
          @right == rhs.right
       end
-    
-#     def to_s
-#       "BooleanNode" << TAB << self.left.to_s.gsub(/\n/,TAB) << TAB << self.op << TAB << self.right.to_s.gsub(/\n/,TAB)
-#     end
   end
 end

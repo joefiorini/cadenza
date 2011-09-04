@@ -1,5 +1,5 @@
 module Cadenza
-   class RenderNode #< Node
+   class RenderNode
       attr_accessor :filename
       
       def initialize(filename)
@@ -30,10 +30,5 @@ module Cadenza
       def ==(rhs)
          @filename == rhs.filename
       end
-    
-#     def to_s
-#       "RenderNode" << TAB << "Filename: #{self.filename}" << TAB << "Locals: #{self.locals.inspect}"
-#     end
-    
    end
 end

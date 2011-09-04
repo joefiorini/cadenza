@@ -1,5 +1,5 @@
 module Cadenza
-  class ArithmeticNode# < Cadenza::Node
+  class ArithmeticNode
     attr_accessor :left, :right, :operator
 
     def initialize(left, op, right)
@@ -13,15 +13,6 @@ module Cadenza
       self.left == rhs.left and
       self.right == rhs.right
     end
-    
-#     def initialize(left,right,op,pos)
-#       super(pos)
-      
-#       self.left = left
-#       self.right = right
-#       self.op = op
-#     end
-    
 #     def implied_globals
 #       left.implied_globals | right.implied_globals
 #     end
@@ -48,17 +39,6 @@ module Cadenza
 #           raise TemplateError('division by zero',self) if r == 0
 #           return l / r
 #       end
-#     end
-    
-#     def ==(rhs)
-#       super(rhs) and
-#       self.left == rhs.left and
-#       self.right == rhs.right and
-#       self.op == rhs.op
-#     end
-    
-#     def to_s
-#       "ArithmeticNode" << TAB << self.left.to_s.gsub(/\n/,TAB) << TAB << self.op << TAB << self.right.to_s.gsub(/\n/,TAB)
 #     end
   end
 end

@@ -1,5 +1,5 @@
 module Cadenza
-  class ConstantNode# < Cadenza::Node
+  class ConstantNode
     attr_accessor :value
      
     def initialize(value)
@@ -21,10 +21,5 @@ module Cadenza
     def ==(rhs)
       self.value == rhs.value
     end
-     
-#     def to_s
-#       "ConstantNode(value:#{self.value})"
-#     end
-     
   end
 end
