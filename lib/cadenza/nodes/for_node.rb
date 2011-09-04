@@ -1,15 +1,14 @@
-# module Cadenza
-#   class ForNode < Cadenza::Node
-#     attr_accessor :iterator, :iterable, :children
+module Cadenza
+  class ForNode #< Cadenza::Node
+   attr_accessor :iterator, :iterable, :children
     
 #     MAGIC_LOCALS = %w(forloop.counter forloop.counter0 forloop.first forloop.last)
-    
-#     def initialize(iterator, iterable, pos)
-#       super(pos)
-#       self.iterator = iterator
-#       self.iterable = iterable
-#       self.children = Array.new
-#     end
+
+   def initialize(iterator, iterable, children)
+      @iterator = iterator
+      @iterable = iterable
+      @children = children
+   end
     
 #     def implied_globals
 #       iterable_globals = iterable.implied_globals
@@ -49,19 +48,17 @@
       
 #       return stream
 #     end
-    
-#     def ==(rhs)
-#       super(rhs) and
-#       self.iterator == rhs.iterator and
-#       self.iterable == rhs.iterable and
-#       self.children == rhs.children
-#     end
-    
+   def ==(rhs)
+      @iterator == rhs.iterator and
+      @iterable == rhs.iterable and
+      @children == rhs.children
+   end
+
 #     def to_s
 #       value = "ForNode(iterator: #{self.iterator}, iterable: #{self.iterable})" << TAB
 #       self.children.each { |child| value << child.to_s.gsub(/\n/,TAB) << TAB }
 #       return value.rstrip
 #     end
     
-#   end
-# end
+  end
+end

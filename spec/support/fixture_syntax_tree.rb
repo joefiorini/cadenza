@@ -22,6 +22,7 @@ private
       when "BooleanNode" then parse_boolean_node(node)
       when "TextNode" then parse_text_node(node)
       when "IfNode" then parse_if_node(node)
+      when "ForNode" then parse_for_node(node)
       else raise "unknown type: #{type}"
     end
   end
@@ -109,6 +110,22 @@ private
     end
 
     Cadenza::IfNode.new(expression_node, true_children, false_children)
+  end
+
+  def parse_for_node(node)
+    iterator_type = node["iterator"].keys.first
+    iterator_node = parse_fixture(iterator_type, node["iterator"][iterator_type])
+
+    iterable_type = node["iterable"].keys.first
+    iterable_node = parse_fixture(iterator_type, node["iterable"][iterable_type])
+
+    children = (node["children"] || []).map do |child|
+      type = child.keys.first
+      inner_node = child[type]
+      parse_fixture(type, inner_node)
+    end
+
+    Cadenza::ForNode.new(iterator_node, iterable_node, children)
   end
 
 end
