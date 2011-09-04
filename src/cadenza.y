@@ -91,11 +91,20 @@ rule
       }
     ;
 
+  block_block
+    : STMT_OPEN BLOCK IDENTIFIER STMT_CLOSE
+      { @stack.push DocumentNode.new }
+      document
+      STMT_OPEN ENDBLOCK STMT_CLOSE
+      { result = BlockNode.new(val[2].value, @stack.pop.children) }
+    ;
+    
   document_component:
     : TEXT_BLOCK { result = TextNode.new(val[0].value) }
     | inject_statement
     | if_block
     | for_block
+    | block_block
     ;
 
   document:

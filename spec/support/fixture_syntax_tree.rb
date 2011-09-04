@@ -24,6 +24,7 @@ private
       when "TextNode" then parse_text_node(node)
       when "IfNode" then parse_if_node(node)
       when "ForNode" then parse_for_node(node)
+      when "BlockNode" then parse_block_node(node)
       else raise "unknown type: #{type}"
     end
   end
@@ -88,6 +89,13 @@ private
     children = list_for_key(node, "children")
 
     Cadenza::ForNode.new(iterator, iterable, children)
+  end
+
+  def parse_block_node(node)
+    name     = node["name"]
+    children = list_for_key(node, "children")
+
+    Cadenza::BlockNode.new(name, children)
   end
 
 private
