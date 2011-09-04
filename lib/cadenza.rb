@@ -9,7 +9,7 @@ require File.join CADENZA_ROOT, "parser"
 require File.join CADENZA_ROOT, "version"
 
 # require all nodes
-Dir.glob(File.join(File.dirname(__FILE__), 'nodes/*.rb')).each {|f| require f }
+Dir.glob(File.join(File.dirname(__FILE__), 'cadenza/nodes/*.rb')).each {|f| require f }
 
 # Rails 3 integration
 if defined?(Rails) and Rails.version >= "3.0.0"
