@@ -38,6 +38,10 @@ private
     if node.has_key?("extends")
       parsed_node.extends = node["extends"].is_a?(String) ? node["extends"] : node_for_key(node, "extends")
     end
+
+    if node.has_key?("blocks")
+      parsed_node.blocks = list_for_key(node, "blocks")
+    end
     
     parsed_node
   end

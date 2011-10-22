@@ -1,6 +1,6 @@
 # {% block foo %}bar{% endblock %}
 DocumentNode:
-  children:
+  blocks:
     - BlockNode:
          name: "foo"
          children:

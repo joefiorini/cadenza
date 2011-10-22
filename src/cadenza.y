@@ -119,7 +119,6 @@ rule
     | inject_statement
     | if_block
     | for_block
-    | block_block
     | render_statement
     | generic_statement
     ;
@@ -129,6 +128,8 @@ rule
     | document document_component { push_child val[1] }
     | extends_statement  { @stack.first.extends = val[0] }
     | document extends_statement { @stack.first.extends = val[1] }
+    | block_block { @stack.first.blocks.push val[0] }
+    | document block_block { @stack.first.blocks.push val[1] }
     ;
 
 ---- header ----

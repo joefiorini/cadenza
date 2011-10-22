@@ -32,6 +32,13 @@ describe Cadenza::DocumentNode do
     @document_a.should_not == @document_b
   end
 
+  it "should not equal a document with different blocks" do
+    @document_a.blocks = [Cadenza::BlockNode.new("foo", [])]
+    @document_b.blocks = [Cadenza::BlockNode.new("bar", [])]
+
+    @document_a.should_not == @document_b
+  end
+
   it "should use it's children's implied globals (unique) for its own implied_globals" do
     @inject_a = Cadenza::InjectNode.new(Cadenza::VariableNode.new("x"))
     @inject_b = Cadenza::InjectNode.new(Cadenza::VariableNode.new("y"))

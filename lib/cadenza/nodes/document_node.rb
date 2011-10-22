@@ -2,15 +2,17 @@ module Cadenza
   class DocumentNode
     attr_accessor :extends
     attr_accessor :children
-    # attr_accessor :blocks
+    attr_accessor :blocks
     
     def initialize(children=[])
       @children = children
+      @blocks = []
     end
 
     def ==(rhs)
       @children == rhs.children and
-      @extends == rhs.extends
+      @extends == rhs.extends and
+      @blocks == rhs.blocks
     end
 
     def implied_globals
