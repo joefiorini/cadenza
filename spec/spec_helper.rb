@@ -8,6 +8,10 @@ def fixture_filename(filename)
   File.expand_path(File.join("fixtures", filename), File.dirname(__FILE__))
 end
 
+def fixture_file_handle(filename)
+   File.open(fixture_filename filename)
+end
+
 RSpec::Matchers.define :have_an_identical_syntax_tree_to do |expected|
   match do |actual|
     @tree = FixtureSyntaxTree.new(expected)

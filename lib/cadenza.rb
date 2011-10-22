@@ -3,6 +3,7 @@ CADENZA_ROOT = File.expand_path("cadenza", File.dirname(__FILE__))
 require File.join CADENZA_ROOT, "token"
 require File.join CADENZA_ROOT, "lexer"
 require File.join CADENZA_ROOT, "parser"
+require File.join CADENZA_ROOT, "context"
 require File.join CADENZA_ROOT, "version"
 
 # require all nodes

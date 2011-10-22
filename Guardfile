@@ -11,6 +11,8 @@ guard 'rspec', :version => 2, :cli => "--color" do
   watch(%r{^lib/cadenza/nodes/.+\.rb$}) { Dir.glob("spec/nodes/*_spec.rb") }
   watch('lib/cadenza/node.rb') { Dir.glob("spec/nodes/*_spec.rb") }
 
+  watch('lib/cadenza/context.rb') { "spec/context_spec.rb" }
+
   watch('spec/spec_helper.rb')
 end
 
