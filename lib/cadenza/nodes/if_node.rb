@@ -11,6 +11,21 @@ module Cadenza
    def implied_globals
       (@expression.implied_globals + true_children.map(&:implied_globals).flatten + false_children.map(&:implied_globals).flatten).uniq
    end
+
+   def evaluate_expression_for_children(context)
+      value = @expression.eval(context)
+
+      if value == true
+         return @true_children
+
+      elsif value == false
+         return @false_children
+
+      elsif value.is_a?(String)
+         return value.length == 0 || value =~ /\s+/ ? @false_children : @true_children
+
+      end
+   end
     
 #     def render(context={}, stream='')
 #       #TODO: i want to raise legitimate exceptions here, but if a method was undefined i want to

@@ -87,4 +87,44 @@ describe Cadenza::IfNode do
 
       if_statement.implied_globals.should == %w(x y z)
    end
+
+   context "expression evaluation to retrieve correct children list" do
+      let(:context) { Cadenza::Context.new }
+
+      let(:pi)  { Cadenza::ConstantNode.new(3.14159) }
+      let(:one) { Cadenza::ConstantNode.new(1) }
+
+      let(:yup) { Cadenza::TextNode.new "yup" }
+      let(:nope) { Cadenza::TextNode.new "nope" }
+
+      it "should return the true children if the expression evaluates to true" do
+         node = Cadenza::IfNode.new(Cadenza::BooleanNode.new(pi, ">", one), [yup], [nope])
+
+         node.evaluate_expression_for_children(context).should == [yup]
+      end
+
+      it "should return the false children if the expression evaluates to false" do
+         node = Cadenza::IfNode.new(Cadenza::BooleanNode.new(pi, "<", one), [yup], [nope])
+
+         node.evaluate_expression_for_children(context).should == [nope]
+      end
+
+      it "should return the true children if the expression evaluates to a non-blank string" do
+         node = Cadenza::IfNode.new(Cadenza::ConstantNode.new("foo"), [yup], [nope])
+
+         node.evaluate_expression_for_children(context).should == [yup]
+      end
+
+      it "should return the false children if the expression evaluates to an empty string" do
+         node = Cadenza::IfNode.new(Cadenza::ConstantNode.new(""), [yup], [nope])
+
+         node.evaluate_expression_for_children(context).should == [nope]
+      end
+
+      it "should return the false children if the expression evaluates to a whitespace string" do
+         node = Cadenza::IfNode.new(Cadenza::ConstantNode.new("\t\n   "), [yup], [nope])
+
+         node.evaluate_expression_for_children(context).should == [nope]
+      end
+   end
 end
