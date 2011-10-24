@@ -13,4 +13,8 @@ describe Cadenza::ConstantNode do
    it "should return an empty array for implied globals" do
       Cadenza::ConstantNode.new(20).implied_globals.should == []
    end
+
+   it "should evaluate to it's constant value" do
+      Cadenza::ConstantNode.new(3.14159).eval(Cadenza::Context.new).should == 3.14159
+   end
 end

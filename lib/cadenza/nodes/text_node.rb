@@ -10,10 +10,6 @@
          []
       end
     
-#     def render(context={}, stream='')
-#       stream << self.text
-#     end
-    
       def ==(rhs)
          @text == rhs.text
       end

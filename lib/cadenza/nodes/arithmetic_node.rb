@@ -18,28 +18,24 @@ module Cadenza
       @left.implied_globals | @right.implied_globals
     end
     
-#     def render(context={}, stream='')
-#       stream << self.eval(context).to_s
-#     end
-    
-#     def eval(context)
-#       l = self.left.eval(context)
-#       r = self.right.eval(context)
+    def eval(context)
+      l = self.left.eval(context)
+      r = self.right.eval(context)
       
-#       case self.op
-#         when '+'
-#           return l + r
+      case self.operator
+        when '+'
+          return l + r
           
-#         when '-'
-#           return l - r
+        when '-'
+          return l - r
           
-#         when '*'
-#           return l * r
+        when '*'
+          return l * r
           
-#         when '/'
-#           raise TemplateError('division by zero',self) if r == 0
-#           return l / r
-#       end
-#     end
+        when '/'
+          # raise TemplateError('division by zero',self) if r == 0
+          return l / r
+      end
+    end
   end
 end

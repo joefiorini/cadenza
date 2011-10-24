@@ -43,4 +43,16 @@ describe Cadenza::ArithmeticNode do
     arithmetic_b.implied_globals.should == %w(a)
   end
 
+  it "should eval to the arithmetic value determined by the operator and operands" do
+    constant_a = Cadenza::ConstantNode.new(10)
+    constant_b = Cadenza::ConstantNode.new(2)
+
+    context = Cadenza::Context.new
+
+    Cadenza::ArithmeticNode.new(constant_a, "+", constant_b).eval(context).should == 12
+    Cadenza::ArithmeticNode.new(constant_a, "-", constant_b).eval(context).should == 8
+    Cadenza::ArithmeticNode.new(constant_a, "*", constant_b).eval(context).should == 20
+    Cadenza::ArithmeticNode.new(constant_a, "/", constant_b).eval(context).should == 5
+  end
+
 end

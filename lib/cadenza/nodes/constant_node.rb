@@ -3,23 +3,19 @@ module Cadenza
       attr_accessor :value
 
       def initialize(value)
-         self.value = value
+         @value = value
       end
     
       def implied_globals
          []
       end
+
+      def eval(context)
+         @value
+      end
           
-#     def render(context={}, stream='')
-#       stream << self.value.to_s
-#     end
-    
-#     def eval(context)
-#       self.value
-#     end
-    
       def ==(rhs)
-         self.value == rhs.value
+         @value == rhs.value
       end
    end
 end

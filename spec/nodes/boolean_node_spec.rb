@@ -41,4 +41,33 @@ describe Cadenza::BooleanNode do
       boolean_a.implied_globals.should == %w(a b)
       boolean_b.implied_globals.should == %w(a)
    end
+
+   it "should eval to the boolean value determined by the operator and operands" do
+      ten = Cadenza::ConstantNode.new(10)
+      twenty = Cadenza::ConstantNode.new(20)
+
+      context = Cadenza::Context.new
+
+      Cadenza::BooleanNode.new(ten, '==', twenty).eval(context).should be_false
+      Cadenza::BooleanNode.new(ten, '==', ten).eval(context).should be_true
+
+      Cadenza::BooleanNode.new(ten, '!=', twenty).eval(context).should be_true
+      Cadenza::BooleanNode.new(ten, '!=', ten).eval(context).should be_false
+
+      Cadenza::BooleanNode.new(ten,    '>=', twenty).eval(context).should be_false
+      Cadenza::BooleanNode.new(ten,    '>=', ten).eval(context).should be_true
+      Cadenza::BooleanNode.new(twenty, '>=', ten).eval(context).should be_true
+
+      Cadenza::BooleanNode.new(ten,    '<=', twenty).eval(context).should be_true
+      Cadenza::BooleanNode.new(ten,    '<=', ten).eval(context).should be_true
+      Cadenza::BooleanNode.new(twenty, '<=', ten).eval(context).should be_false
+
+      Cadenza::BooleanNode.new(ten,    '<', twenty).eval(context).should be_true
+      Cadenza::BooleanNode.new(ten,    '<', ten).eval(context).should be_false
+      Cadenza::BooleanNode.new(twenty, '<', ten).eval(context).should be_false
+
+      Cadenza::BooleanNode.new(ten,    '>', twenty).eval(context).should be_false
+      Cadenza::BooleanNode.new(ten,    '>', ten).eval(context).should be_false
+      Cadenza::BooleanNode.new(twenty, '>', ten).eval(context).should be_true
+   end
 end
