@@ -24,6 +24,12 @@ module Cadenza
       elsif value.is_a?(String)
          return value.length == 0 || value =~ /\s+/ ? @false_children : @true_children
 
+      elsif value.is_a?(Float) or value.is_a?(Fixnum)
+         return value == 0 ? @false_children : @true_children
+
+      else
+         return !!value ? @true_children : @false_children
+         
       end
    end
     

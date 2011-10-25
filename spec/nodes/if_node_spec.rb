@@ -126,5 +126,23 @@ describe Cadenza::IfNode do
 
          node.evaluate_expression_for_children(context).should == [nope]
       end
+
+      it "should return the true children if the expression evaluates to a nonzero number" do
+         node = Cadenza::IfNode.new(Cadenza::ConstantNode.new(10), [yup], [nope])
+
+         node.evaluate_expression_for_children(context).should == [yup]
+      end
+
+      it "should return the false children if the expression evaluates to a zero number" do
+         node = Cadenza::IfNode.new(Cadenza::ConstantNode.new(0), [yup], [nope])
+
+         node.evaluate_expression_for_children(context).should == [nope]
+      end
+
+      it "should return the appropriate children for the expression coerced to a boolean" do
+         node = Cadenza::IfNode.new(Cadenza::ConstantNode.new(nil), [yup], [nope])
+
+         node.evaluate_expression_for_children(context).should == [nope]
+      end
    end
 end
