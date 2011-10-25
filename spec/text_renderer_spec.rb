@@ -64,4 +64,22 @@ describe Cadenza::TextRenderer do
 
       renderer.output.string.should == "yup"
    end
+
+   it "should render the value of a inject node to the output" do
+      pi = Cadenza::VariableNode.new("pi")
+
+      floor = Cadenza::FilterNode.new("floor")
+      add_one = Cadenza::FilterNode.new("add", [Cadenza::ConstantNode.new(1)])
+
+      context = Cadenza::Context.new({:pi => 3.14159}, {
+         :floor => Proc.new {|value| value.floor },
+         :add =>   Proc.new {|value, amount| value + amount }
+      })
+
+      document.children.push Cadenza::InjectNode.new(pi, [floor, add_one])
+
+      renderer.render(document, context)
+
+      renderer.output.string.should == "4"
+   end
 end

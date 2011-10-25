@@ -24,4 +24,24 @@ describe Cadenza::FilterNode do
 
     filter.implied_globals.should == %w(x)
   end
+
+  it "should evaluate the filter on a value given a context" do
+    context = Cadenza::Context.new({}, {
+      :floor => Proc.new {|value| value.floor }
+    })
+
+    filter = Cadenza::FilterNode.new("floor")
+
+    filter.evaluate(context, 3.14159).should == 3
+  end
+
+  it "should pass parameters to the filter function when evaluating" do
+    context = Cadenza::Context.new({}, {
+      :add => Proc.new {|value, amount| value + amount }
+    })
+
+    filter = Cadenza::FilterNode.new("add", [Cadenza::ConstantNode.new(1)])
+
+    filter.evaluate(context, 3.14159).should == 4.14159
+  end
 end

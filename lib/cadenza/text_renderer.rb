@@ -21,6 +21,8 @@ module Cadenza
                @output << node.eval(context).to_s
             when BooleanNode
                @output << node.eval(context).to_s
+            when InjectNode
+               @output << node.evaluate(context).to_s
             when IfNode
                node.evaluate_expression_for_children(context).each {|x| render(x, context) }
          end

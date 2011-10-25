@@ -11,5 +11,10 @@ module Cadenza
       def implied_globals
          @parameters.map(&:implied_globals).flatten.uniq
       end
+
+      def evaluate(context, value)
+         params = [value] + @parameters.map {|x| x.eval(context) }
+         context.evaluate_filter(@identifier, params)
+      end
    end
 end

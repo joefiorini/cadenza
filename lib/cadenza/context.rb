@@ -2,12 +2,15 @@
 module Cadenza
 
    class Context
-      attr_accessor :stack
+      attr_reader :stack, :filters
 
-      def initialize(initial_scope={})
+      def initialize(initial_scope={}, initial_filters={})
          @stack = []
+         @filters = {}
 
          push initial_scope
+
+         initial_filters.each {|name, callback| define_filter(name, &callback) }
       end
 
       def lookup(identifier)
@@ -28,6 +31,14 @@ module Cadenza
 
       def pop
          @stack.pop
+      end
+
+      def define_filter(name, &block)
+         @filters[name.to_sym] = block
+      end
+
+      def evaluate_filter(name, params=[])
+         @filters[name.to_sym].call(*params)
       end
 
    private

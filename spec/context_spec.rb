@@ -7,6 +7,10 @@ describe Cadenza::Context do
       Cadenza::Context.new.stack.should == [{}]
    end
 
+   it "should start with an empty filter map" do
+      Cadenza::Context.new.filters.should == {}
+   end
+
    it "should take a hash and define that as the stack's first element" do
       Cadenza::Context.new(:foo => "bar").stack.should == [{:foo => "bar"}]
    end
@@ -59,5 +63,31 @@ describe Cadenza::Context do
 
    it "should look up array indexes" do
       Cadenza::Context.new(:alphabet => %w(a b c)).lookup("alphabet.1").should == "b"
+   end
+
+   it "should allow defining a filter method" do
+      context = Cadenza::Context.new
+
+      context.define_filter :pluralize do |input|
+         input + 's'
+      end
+
+      context.filters[:pluralize].should be_a(Proc)
+   end
+
+   it "should allow passing filters via the constructor" do
+      context = Cadenza::Context.new({}, {
+         :pluralize => Proc.new {|input| "#{input}s" }
+      })
+
+      context.filters[:pluralize].should be_a(Proc)
+   end
+
+   it "should evaluate a filter" do
+      context = Cadenza::Context.new({}, {
+         :pluralize => Proc.new {|input| "#{input}s" }
+      })
+      
+      context.evaluate_filter(:pluralize, "bar").should == "bars"
    end
 end

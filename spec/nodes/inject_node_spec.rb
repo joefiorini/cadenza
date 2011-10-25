@@ -41,4 +41,27 @@ describe Cadenza::InjectNode do
     inject.implied_globals.should == %w(myvar x y)
   end
 
+  it "should evaluate to the value's evaluation if there are no filters" do
+    inject = Cadenza::InjectNode.new(Cadenza::VariableNode.new("pi"))
+    context = Cadenza::Context.new(:pi => 3.14159)
+
+    inject.evaluate(context).should == 3.14159
+  end
+
+  it "should evaluate to the value's evaluation passed through each chained filter" do
+    pi = Cadenza::VariableNode.new("pi")
+    
+    floor = Cadenza::FilterNode.new("floor")
+    add_one = Cadenza::FilterNode.new("add", [Cadenza::ConstantNode.new(1)])
+
+    inject = Cadenza::InjectNode.new(pi, [floor, add_one])
+
+    context = Cadenza::Context.new({:pi => 3.14159}, {
+      :floor => Proc.new {|value| value.floor },
+      :add => Proc.new {|value, amount| value + amount }
+    })
+
+    inject.evaluate(context).should == 4
+  end
+
 end
