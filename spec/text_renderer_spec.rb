@@ -82,4 +82,20 @@ describe Cadenza::TextRenderer do
 
       renderer.output.string.should == "4"
    end
+
+   it "should render a for block's children the specified number of times" do
+      iterable = Cadenza::VariableNode.new("alphabet")
+      iterator = Cadenza::VariableNode.new("x")
+      counter  = Cadenza::VariableNode.new("counter")
+
+      children = [Cadenza::InjectNode.new(counter), Cadenza::TextNode.new(": "), Cadenza::InjectNode.new(iterator), Cadenza::TextNode.new("\n")]
+
+      context = Cadenza::Context.new({:alphabet => %w(a b c)})
+
+      document.children.push Cadenza::ForNode.new(iterator, iterable, children)
+
+      renderer.render(document, context)
+
+      renderer.output.string.should == "1: a\n2: b\n3: c\n"
+   end
 end
