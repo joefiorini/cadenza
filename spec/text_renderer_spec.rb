@@ -71,10 +71,10 @@ describe Cadenza::TextRenderer do
       floor = Cadenza::FilterNode.new("floor")
       add_one = Cadenza::FilterNode.new("add", [Cadenza::ConstantNode.new(1)])
 
-      context = Cadenza::Context.new({:pi => 3.14159}, {
-         :floor => Proc.new {|value| value.floor },
-         :add =>   Proc.new {|value, amount| value + amount }
-      })
+      context = Cadenza::Context.new(:pi => 3.14159)
+
+      context.define_filter(:floor) {|value|        value.floor    }
+      context.define_filter(:add)   {|value,amount| value + amount }
 
       document.children.push Cadenza::InjectNode.new(pi, [floor, add_one])
 

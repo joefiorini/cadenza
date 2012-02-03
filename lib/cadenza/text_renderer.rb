@@ -21,8 +21,11 @@ module Cadenza
             when IfNode
                node.evaluate_expression_for_children(context).each {|x| render(x, context) }
 
+            when GenericStatementNode
+               # TODO:
+
             when ForNode
-               enumerator = node.iterable.eval(context).each
+               enumerator = node.iterable.eval(context).to_enum
                iterator = node.iterator.identifier
 
                counter = 0
@@ -31,7 +34,7 @@ module Cadenza
                   value = enumerator.next rescue break
 
                   is_first = (counter == 0)
-                  is_last  = enumerator.peek rescue false ? true : false
+                  is_last  = enumerator.peek rescue false ? true : false  #TODO: this doesn't work in 1.8.x
 
                   # push the inner context with the 'magic' variables
                   context.push({

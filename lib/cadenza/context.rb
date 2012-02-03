@@ -2,15 +2,14 @@
 module Cadenza
 
    class Context
-      attr_reader :stack, :filters
+      attr_reader :stack, :filters, :statements
 
-      def initialize(initial_scope={}, initial_filters={})
+      def initialize(initial_scope={})
          @stack = []
          @filters = {}
+         @statements = {}
 
          push initial_scope
-
-         initial_filters.each {|name, callback| define_filter(name, &callback) }
       end
 
       def lookup(identifier)
@@ -21,6 +20,10 @@ module Cadenza
          end
          
          nil
+      end
+
+      def assign(identifier, value)
+         @stack.last[identifier.to_sym] = value
       end
 
       # TODO: symbolizing strings is slow so consider symbolizing here to improve
@@ -39,6 +42,14 @@ module Cadenza
 
       def evaluate_filter(name, params=[])
          @filters[name.to_sym].call(*params)
+      end
+
+      def define_statement(name, &block)
+         @statements[name.to_sym] = block
+      end
+
+      def evaluate_statement(name, params=[])
+         @statements[name.to_sym].call([self] + params)
       end
 
    private

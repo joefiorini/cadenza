@@ -56,10 +56,10 @@ describe Cadenza::InjectNode do
 
     inject = Cadenza::InjectNode.new(pi, [floor, add_one])
 
-    context = Cadenza::Context.new({:pi => 3.14159}, {
-      :floor => Proc.new {|value| value.floor },
-      :add => Proc.new {|value, amount| value + amount }
-    })
+    context = Cadenza::Context.new(:pi => 3.14159)
+
+    context.define_filter(:floor) {|value|        value.floor    }
+    context.define_filter(:add)   {|value,amount| value + amount }
 
     inject.evaluate(context).should == 4
   end

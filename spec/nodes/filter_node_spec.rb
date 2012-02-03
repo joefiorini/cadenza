@@ -26,9 +26,8 @@ describe Cadenza::FilterNode do
   end
 
   it "should evaluate the filter on a value given a context" do
-    context = Cadenza::Context.new({}, {
-      :floor => Proc.new {|value| value.floor }
-    })
+    context = Cadenza::Context.new
+    context.define_filter(:floor) {|value| value.floor }
 
     filter = Cadenza::FilterNode.new("floor")
 
@@ -36,9 +35,11 @@ describe Cadenza::FilterNode do
   end
 
   it "should pass parameters to the filter function when evaluating" do
-    context = Cadenza::Context.new({}, {
-      :add => Proc.new {|value, amount| value + amount }
-    })
+    context = Cadenza::Context.new
+
+    context.define_filter :add do |value, amount|
+      value + amount
+    end
 
     filter = Cadenza::FilterNode.new("add", [Cadenza::ConstantNode.new(1)])
 
