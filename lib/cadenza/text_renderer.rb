@@ -1,16 +1,21 @@
 
 module Cadenza
    class TextRenderer
-      attr_reader :output
+      attr_reader :output, :document
 
       def initialize(output_io)
          @output = output_io
       end
 
       def render(node, context)
+         @document ||= node
+
          case node
             when DocumentNode
                node.children.each {|x| render(x, context) }
+
+            when BlockNode
+               node.children.each {|x| render(x, context) } unless document.extends
 
             when TextNode
                @output << node.text

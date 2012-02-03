@@ -115,4 +115,30 @@ describe Cadenza::TextRenderer do
 
       renderer.output.string.should == "bar"
    end
+
+   context "block nodes" do
+      it "should render it's children if the document has no layout file" do
+         document.extends = nil
+
+         text = Cadenza::TextNode.new("Lorem Ipsum")
+
+         document.children.push Cadenza::BlockNode.new("test", [text])
+
+         renderer.render(document, context)
+
+         renderer.output.string.should == "Lorem Ipsum"
+      end
+
+      it "should not render it's children if the document has a layout file" do
+         document.extends = "layout.html.cadenza"
+
+         text = Cadenza::TextNode.new("Lorem Ipsum")
+
+         document.children.push Cadenza::BlockNode.new("test", [text])
+
+         renderer.render(document, context)
+
+         renderer.output.string.should == ""
+      end
+   end
 end
