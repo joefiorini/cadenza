@@ -22,7 +22,9 @@ module Cadenza
                node.evaluate_expression_for_children(context).each {|x| render(x, context) }
 
             when GenericStatementNode
-               # TODO:
+               params = node.parameters.map {|n| n.eval(context) }
+               
+               context.evaluate_statement(node.name, params)
 
             when ForNode
                enumerator = node.iterable.eval(context).to_enum

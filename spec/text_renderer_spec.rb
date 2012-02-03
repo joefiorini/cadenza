@@ -83,7 +83,7 @@ describe Cadenza::TextRenderer do
       renderer.output.string.should == "4"
    end
 
-   it "should render a for block's children the specified number of times" do
+   it "should render a for-block's children once for each iterated object" do
       iterable = Cadenza::VariableNode.new("alphabet")
       iterator = Cadenza::VariableNode.new("x")
       counter  = Cadenza::VariableNode.new("counter")
@@ -97,5 +97,22 @@ describe Cadenza::TextRenderer do
       renderer.render(document, context)
 
       renderer.output.string.should == "1: a\n2: b\n3: c\n"
+   end
+
+   it "should render the result of a generic statement's value" do
+      context = Cadenza::Context.new
+      context.define_statement(:assign) {|context, name, value| context.assign(name, value); nil }
+
+      foo = Cadenza::ConstantNode.new("foo")
+      bar = Cadenza::ConstantNode.new("bar")
+
+      foovar = Cadenza::VariableNode.new("foo")
+
+      document.children.push Cadenza::GenericStatementNode.new("assign", [foo, bar])
+      document.children.push Cadenza::InjectNode.new(foovar)
+
+      renderer.render(document, context)
+
+      renderer.output.string.should == "bar"
    end
 end
