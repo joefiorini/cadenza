@@ -99,9 +99,9 @@ describe Cadenza::TextRenderer do
       renderer.output.string.should == "1: a\n2: b\n3: c\n"
    end
 
-   it "should render the result of a generic statement's value" do
+   it "should evaluate the generic statement" do
       context = Cadenza::Context.new
-      context.define_statement(:assign) {|context, name, value| context.assign(name, value); nil }
+      context.define_statement(:assign) {|context, name, value| context.assign(name, value) }
 
       foo = Cadenza::ConstantNode.new("foo")
       bar = Cadenza::ConstantNode.new("bar")
