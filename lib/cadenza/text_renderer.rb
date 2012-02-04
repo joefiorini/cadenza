@@ -7,16 +7,15 @@ module Cadenza
          @output = output_io
       end
 
-      def render(node, context, blocks=[])
+      def render(node, context, blocks={})
          @document ||= node
 
          case node
             when DocumentNode
                if node.extends
-                  # merge the inherited blocks 
-                  block_names = blocks.map(&:name)
-
-                  blocks = blocks + node.blocks.reject {|b| block_names.include?(b.name) }
+                  # merge the inherited blocks onto this document's blocks to
+                  # determine what to pass to the layout template
+                  blocks = node.blocks.merge(blocks)
 
                   # load the template of the document and render it to the same output stream
                   template = context.load_template!(node.extends)
@@ -34,7 +33,8 @@ module Cadenza
                TextRenderer.new(@output).render(template, context)
 
             when BlockNode
-               block = blocks.detect {|b| b.name == node.name }
+               # block = blocks.detect {|b| b.name == node.name }
+               block = blocks[node.name]
 
                (block || node).children.each {|x| render(x, context) }
 

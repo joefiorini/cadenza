@@ -6,13 +6,17 @@ module Cadenza
     
     def initialize(children=[])
       @children = children
-      @blocks = []
+      @blocks = {}
     end
 
     def ==(rhs)
       @children == rhs.children and
       @extends == rhs.extends and
       @blocks == rhs.blocks
+    end
+
+    def add_block(block)
+      @blocks[block.name] = block
     end
 
     def implied_globals

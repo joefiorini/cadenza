@@ -126,7 +126,7 @@ describe Cadenza::TextRenderer do
          block = Cadenza::BlockNode.new("test", [text])
 
          document.extends = nil
-         document.blocks.push block
+         document.add_block(block)
          document.children.push block
 
          renderer.render(document, context)
@@ -138,7 +138,7 @@ describe Cadenza::TextRenderer do
          block = Cadenza::BlockNode.new("test", [text])
 
          document.extends = "empty.html.cadenza"
-         document.blocks.push block
+         document.add_block(block)
          document.children.push block
 
          renderer.render(document, context)
@@ -153,11 +153,11 @@ describe Cadenza::TextRenderer do
          lorem_block = Cadenza::BlockNode.new("test", [text_b])
 
          document.extends = "empty.html.cadenza"
-         document.blocks.push hello_block
+         document.add_block(hello_block)
          document.children.push hello_block
 
          layout = Cadenza::DocumentNode.new
-         layout.blocks.push lorem_block
+         layout.add_block(lorem_block)
          layout.children.push lorem_block
 
          context.stub(:load_template).and_return(layout)

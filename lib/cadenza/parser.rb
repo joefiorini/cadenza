@@ -37,7 +37,7 @@ def push_child(node)
 end
 
 def push_block(block_node)
-  @stack.first.blocks.push(block_node)
+  @stack.first.add_block(block_node)
   push_child(block_node)
 end
 

@@ -40,7 +40,7 @@ private
     end
 
     if node.has_key?("blocks")
-      parsed_node.blocks = list_for_key(node, "blocks")
+      parsed_node.blocks = hash_for_key(node, "blocks")
     end
     
     parsed_node
@@ -126,6 +126,17 @@ private
   def node_for_key(node, key)
     type = node[key].keys.first
     parse_fixture(type, node[key][type])
+  end
+
+  def hash_for_key(node, key)
+    result = {}
+    parent = node[key]
+
+    parent.keys.each do |name|
+      result[name] = node_for_key(parent, name)
+    end
+
+    result
   end
 
   def list_for_key(node, key)

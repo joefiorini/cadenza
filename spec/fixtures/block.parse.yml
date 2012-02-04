@@ -7,8 +7,9 @@ DocumentNode:
             - TextNode:
                text: "bar"
    blocks:
-      - BlockNode:
-         name: "foo"
-         children:
-            - TextNode:
-               text: "bar"
+      foo:
+         BlockNode:
+            name: "foo"
+            children:
+               - TextNode:
+                  text: "bar"
