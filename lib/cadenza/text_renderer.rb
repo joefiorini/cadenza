@@ -13,15 +13,19 @@ module Cadenza
          case node
             when DocumentNode
                if node.extends
-                  blocks = node.blocks
+                  # merge the inherited blocks 
+                  block_names = blocks.map(&:name)
 
+                  blocks = blocks + node.blocks.reject {|b| block_names.include?(b.name) }
+
+                  # load the template of the document and render it to the same output stream
                   template = context.load_template!(node.extends)
 
                   @document = template
 
                   render(template, context, blocks)
                else
-                  node.children.each {|x| render(x, context) }
+                  node.children.each {|x| render(x, context, blocks) }
                end
 
             when RenderNode
@@ -30,7 +34,10 @@ module Cadenza
                TextRenderer.new(@output).render(template, context)
 
             when BlockNode
-               node.children.each {|x| render(x, context) } unless document.extends
+               block = blocks.detect {|b| b.name == node.name }
+
+               (block || node).children.each {|x| render(x, context) }
+
 
             when TextNode
                @output << node.text
@@ -83,6 +90,17 @@ module Cadenza
                @output << node.eval(context).to_s
          end
       end
+
+      def underscore(camel_cased_word)
+         word = camel_cased_word.to_s.dup
+         word.gsub!(/::/, '/')
+         word.gsub!(/(?:([A-Za-z\d])|^)(#{inflections.acronym_regex})(?=\b|[^a-z])/) { "#{$1}#{$1 && '_'}#{$2.downcase}" }
+         word.gsub!(/([A-Z\d]+)([A-Z][a-z])/,'\1_\2')
+         word.gsub!(/([a-z\d])([A-Z])/,'\1_\2')
+         word.tr!("-", "_")
+         word.downcase!
+         word
+       end
 
    end
 end

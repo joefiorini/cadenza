@@ -122,27 +122,48 @@ describe Cadenza::TextRenderer do
 
    context "block nodes" do
       it "should render it's children if the document has no layout file" do
-         document.extends = nil
-
          text = Cadenza::TextNode.new("Lorem Ipsum")
+         block = Cadenza::BlockNode.new("test", [text])
 
-         document.children.push Cadenza::BlockNode.new("test", [text])
+         document.extends = nil
+         document.blocks.push block
+         document.children.push block
 
          renderer.render(document, context)
-
          renderer.output.string.should == "Lorem Ipsum"
       end
 
       it "should not render it's children if the document has a layout file" do
-         document.extends = "empty.html.cadenza"
-
          text = Cadenza::TextNode.new("Lorem Ipsum")
+         block = Cadenza::BlockNode.new("test", [text])
 
-         document.children.push Cadenza::BlockNode.new("test", [text])
+         document.extends = "empty.html.cadenza"
+         document.blocks.push block
+         document.children.push block
 
          renderer.render(document, context)
-
          renderer.output.string.should == ""
+      end
+
+      it "should render the overriden block if it is given" do
+         text_a = Cadenza::TextNode.new("Hello World")
+         text_b = Cadenza::TextNode.new("Lorem Ipsum")
+
+         hello_block = Cadenza::BlockNode.new("test", [text_a])
+         lorem_block = Cadenza::BlockNode.new("test", [text_b])
+
+         document.extends = "empty.html.cadenza"
+         document.blocks.push hello_block
+         document.children.push hello_block
+
+         layout = Cadenza::DocumentNode.new
+         layout.blocks.push lorem_block
+         layout.children.push lorem_block
+
+         context.stub(:load_template).and_return(layout)
+
+         renderer.render(document, context)
+         renderer.output.string.should == "Hello World"
       end
    end
 
@@ -151,21 +172,27 @@ describe Cadenza::TextRenderer do
          document.children.push Cadenza::RenderNode.new("test.html.cadenza")
 
          renderer.render(document, context)
-
          renderer.output.string.should == "abc3.14159ghi"
       end
 
    end
 
    context "extension nodes" do
-      index_file   = File.read(fixture_filename "templates/index.html.cadenza")
+      index_file     = File.read(fixture_filename "templates/index.html.cadenza")
+      index_two_file = File.read(fixture_filename "templates/index_two.html.cadenza")
 
       it "should render the extended template with the blocks from the base template" do
          index = Cadenza::Parser.new.parse(index_file)
          
          renderer.render(index, context)
-
          renderer.output.string.should be_html_equivalent_to File.read(fixture_filename "templates/index.html")
+      end
+
+      it "should render a multi tier layout" do
+         index = Cadenza::Parser.new.parse(index_two_file)
+
+         renderer.render(index, context)
+         renderer.output.string.should be_html_equivalent_to File.read(fixture_filename "templates/index_two.html")
       end
    end
 end
