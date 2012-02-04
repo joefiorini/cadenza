@@ -6,101 +6,106 @@ module Cadenza
       def initialize(output_io)
          @output = output_io
       end
-
+      
       def render(node, context, blocks={})
          @document ||= node
 
-         case node
-            when DocumentNode
-               if node.extends
-                  # merge the inherited blocks onto this document's blocks to
-                  # determine what to pass to the layout template
-                  blocks = node.blocks.merge(blocks)
+         node_name = underscore(node.class.name.split("::").last)
 
-                  # load the template of the document and render it to the same output stream
-                  template = context.load_template!(node.extends)
+         send("render_#{node_name}", node, context, blocks)
+      end
 
-                  @document = template
+      # very consise form of ActiveSupport's underscore method
+      def underscore(word)
+         word.gsub!(/([a-z\d])([A-Z])/,'\1_\2').downcase!
+      end
 
-                  render(template, context, blocks)
-               else
-                  node.children.each {|x| render(x, context, blocks) }
-               end
+      def render_document_node(node, context, blocks)
+         if node.extends
+            # merge the inherited blocks onto this document's blocks to
+            # determine what to pass to the layout template
+            blocks = node.blocks.merge(blocks)
 
-            when RenderNode
-               template = context.load_template(node.filename) || ""
+            # load the template of the document and render it to the same output stream
+            template = context.load_template!(node.extends)
 
-               TextRenderer.new(@output).render(template, context)
+            @document = template
 
-            when BlockNode
-               # block = blocks.detect {|b| b.name == node.name }
-               block = blocks[node.name]
+            render(template, context, blocks)
+         else
+            node.children.each {|x| render(x, context, blocks) }
+         end         
+      end
 
-               (block || node).children.each {|x| render(x, context) }
+      def render_render_node(node, context, blocks)
+         template = context.load_template(node.filename) || ""
 
+         TextRenderer.new(@output).render(template, context)
+      end
 
-            when TextNode
-               @output << node.text
+      def render_block_node(node, context, blocks)
+         (blocks[node.name] || node).children.each {|x| render(x, context) }
+      end
 
-            when InjectNode
-               @output << node.evaluate(context).to_s
+      def render_text_node(node, context, blocks)
+         @output << node.text
+      end
 
-            when IfNode
-               node.evaluate_expression_for_children(context).each {|x| render(x, context) }
+      def render_inject_node(node, context, blocks)
+         @output << node.evaluate(context).to_s
+      end
 
-            when GenericStatementNode
-               params = node.parameters.map {|n| n.eval(context) }
-               
-               context.evaluate_statement(node.name, params)
+      def render_if_node(node, context, blocks)
+         node.evaluate_expression_for_children(context).each {|x| render(x, context) }
+      end
 
-            when ForNode
-               enumerator = node.iterable.eval(context).to_enum
-               iterator = node.iterator.identifier
+      def render_generic_statement_node(node, context, blocks)
+         params = node.parameters.map {|n| n.eval(context) }
+         
+         context.evaluate_statement(node.name, params)
+      end
 
-               counter = 0
-               loop do
-                  # grab some values for the inner context
-                  value = enumerator.next rescue break
+      def render_for_node(node, context, blocks)
+         enumerator = node.iterable.eval(context).to_enum
+         iterator = node.iterator.identifier
 
-                  is_first = (counter == 0)
-                  is_last  = enumerator.peek rescue false ? true : false  #TODO: this doesn't work in 1.8.x
+         counter = 0
+         loop do
+            # grab some values for the inner context
+            value = enumerator.next rescue break
 
-                  # push the inner context with the 'magic' variables
-                  context.push({
-                     iterator => value, 
-                     'counter' => counter + 1, 
-                     'counter0' => counter, 
-                     'first' => is_first, 
-                     'last' => is_last
-                  })
+            is_first = (counter == 0)
+            is_last  = enumerator.peek rescue false ? true : false  #TODO: this doesn't work in 1.8.x
 
-                  # render each of the child nodes with the context
-                  node.children.each {|x| render(x, context) }
+            # push the inner context with the 'magic' variables
+            context.push({
+               iterator => value, 
+               'counter' => counter + 1, 
+               'counter0' => counter, 
+               'first' => is_first, 
+               'last' => is_last
+            })
 
-                  # pop the inner context off
-                  context.pop
+            # render each of the child nodes with the context
+            node.children.each {|x| render(x, context) }
 
-                  # increment the counter
-                  counter += 1
-               end
+            # pop the inner context off
+            context.pop
 
-            # none of these should appear directly inside the body of the 
-            # document but for safety we will render them normally
-            when ConstantNode, VariableNode, ArithmeticNode, BooleanNode
-               @output << node.eval(context).to_s
+            # increment the counter
+            counter += 1
          end
       end
 
-      def underscore(camel_cased_word)
-         word = camel_cased_word.to_s.dup
-         word.gsub!(/::/, '/')
-         word.gsub!(/(?:([A-Za-z\d])|^)(#{inflections.acronym_regex})(?=\b|[^a-z])/) { "#{$1}#{$1 && '_'}#{$2.downcase}" }
-         word.gsub!(/([A-Z\d]+)([A-Z][a-z])/,'\1_\2')
-         word.gsub!(/([a-z\d])([A-Z])/,'\1_\2')
-         word.tr!("-", "_")
-         word.downcase!
-         word
-       end
+      # none of these should appear directly inside the body of the 
+      # document but for safety we will render them anyways
+      def render_constant_node(node, context, blocks)
+         @output << node.eval(context).to_s
+      end
+
+      alias :render_variable_node   :render_constant_node
+      alias :render_arithmetic_node :render_constant_node
+      alias :render_boolean_node    :render_constant_node
 
    end
 end
