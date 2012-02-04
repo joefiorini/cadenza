@@ -1,7 +1,13 @@
 # {% block foo %}bar{% endblock %}
 DocumentNode:
-  blocks:
-    - BlockNode:
+   children:
+      - BlockNode:
+         name: "foo"
+         children:
+            - TextNode:
+               text: "bar"
+   blocks:
+      - BlockNode:
          name: "foo"
          children:
             - TextNode:

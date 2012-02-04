@@ -36,6 +36,11 @@ def push_child(node)
   @stack.last.children.push(node)
 end
 
+def push_block(block_node)
+  @stack.first.blocks.push(block_node)
+  push_child(block_node)
+end
+
 def next_token
   @lexer.next_token
 end
@@ -669,14 +674,14 @@ module_eval(<<'.,.,', 'cadenza.y', 129)
 
 module_eval(<<'.,.,', 'cadenza.y', 130)
   def _reduce_53(val, _values, result)
-     @stack.first.blocks.push val[0] 
+     push_block(val[0]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'cadenza.y', 131)
   def _reduce_54(val, _values, result)
-     @stack.first.blocks.push val[1] 
+     push_block(val[1]) 
     result
   end
 .,.,

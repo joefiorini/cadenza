@@ -14,6 +14,10 @@ describe Cadenza::Context do
       Cadenza::Context.new.statements.should be_empty
    end
 
+   it "should begin with whiny template loading disabled" do
+      Cadenza::Context.new.whiny_template_loading.should == false
+   end
+
    it "should take a hash and define that as the stack's first element" do
       Cadenza::Context.new(:foo => "bar").stack.should == [{:foo => "bar"}]
    end
@@ -148,6 +152,20 @@ describe Cadenza::Context do
          context.add_loader(Cadenza::FilesystemLoader.new(template_path))
 
          context.load_template("fake.html").should be_nil
+      end
+
+      it "should raise an error if no template was found and whiny template loading is enabled" do
+         context.whiny_template_loading = true
+
+         lambda do
+            context.load_template("fake.html")
+         end.should raise_error Cadenza::TemplateNotFoundError
+      end
+
+      it "should always raise the exception regardless of whiny template loading when the bang is provided" do
+         lambda do
+            context.load_template!("fake.html")
+         end.should raise_error Cadenza::TemplateNotFoundError
       end
 
       it "should traverse the loaders in order to find the first loaded template" do

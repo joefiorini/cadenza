@@ -14,6 +14,10 @@ describe Cadenza::TextRenderer do
    let(:true_boolean_expression) { Cadenza::BooleanNode.new pi, ">", one }
    let(:false_boolean_expression) { Cadenza::BooleanNode.new pi, "<", one }
 
+   before do
+      context.add_loader Cadenza::FilesystemLoader.new(fixture_filename "templates")
+   end
+
    it "should render a text node's content" do
       document.children.push Cadenza::TextNode.new "foo"
 
@@ -130,7 +134,7 @@ describe Cadenza::TextRenderer do
       end
 
       it "should not render it's children if the document has a layout file" do
-         document.extends = "layout.html.cadenza"
+         document.extends = "empty.html.cadenza"
 
          text = Cadenza::TextNode.new("Lorem Ipsum")
 
@@ -139,6 +143,29 @@ describe Cadenza::TextRenderer do
          renderer.render(document, context)
 
          renderer.output.string.should == ""
+      end
+   end
+
+   context "render nodes" do
+      it "should render the children of the rendered template" do
+         document.children.push Cadenza::RenderNode.new("test.html.cadenza")
+
+         renderer.render(document, context)
+
+         renderer.output.string.should == "abc3.14159ghi"
+      end
+
+   end
+
+   context "extension nodes" do
+      index_file   = File.read(fixture_filename "templates/index.html.cadenza")
+
+      it "should render the extended template with the blocks from the base template" do
+         index = Cadenza::Parser.new.parse(index_file)
+         
+         renderer.render(index, context)
+
+         renderer.output.string.should be_html_equivalent_to File.read(fixture_filename "templates/index.html")
       end
    end
 end

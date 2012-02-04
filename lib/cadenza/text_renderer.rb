@@ -7,12 +7,27 @@ module Cadenza
          @output = output_io
       end
 
-      def render(node, context)
+      def render(node, context, blocks=[])
          @document ||= node
 
          case node
             when DocumentNode
-               node.children.each {|x| render(x, context) }
+               if node.extends
+                  blocks = node.blocks
+
+                  template = context.load_template!(node.extends)
+
+                  @document = template
+
+                  render(template, context, blocks)
+               else
+                  node.children.each {|x| render(x, context) }
+               end
+
+            when RenderNode
+               template = context.load_template(node.filename) || ""
+
+               TextRenderer.new(@output).render(template, context)
 
             when BlockNode
                node.children.each {|x| render(x, context) } unless document.extends

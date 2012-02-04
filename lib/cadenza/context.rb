@@ -1,14 +1,19 @@
 
 module Cadenza
+   class TemplateNotFoundError < StandardError
+   end
 
    class Context
       attr_reader :stack, :filters, :statements, :loaders
+
+      attr_accessor :whiny_template_loading
 
       def initialize(initial_scope={})
          @stack = []
          @filters = {}
          @statements = {}
          @loaders = []
+         @whiny_template_loading = false
 
          push initial_scope
       end
@@ -55,7 +60,7 @@ module Cadenza
 
       def add_loader(loader)
          if loader.is_a?(String)
-            @loaders.push Cadenza::FilesystemLoader.new(loader)
+            @loaders.push FilesystemLoader.new(loader)
          else
             @loaders.push loader
          end
@@ -69,7 +74,21 @@ module Cadenza
             break if template
          end
          
-         template
+         if template.nil? and whiny_template_loading
+            raise TemplateNotFoundError.new(template_name)
+         else
+            return template
+         end
+      end
+
+      def load_template!(template_name)
+         template = load_template(template_name)
+
+         if template
+            return template
+         else
+            raise TemplateNotFoundError.new(template_name)
+         end
       end
 
    private

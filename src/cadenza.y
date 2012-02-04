@@ -128,8 +128,8 @@ rule
     | document document_component { push_child val[1] }
     | extends_statement  { @stack.first.extends = val[0] }
     | document extends_statement { @stack.first.extends = val[1] }
-    | block_block { @stack.first.blocks.push val[0] }
-    | document block_block { @stack.first.blocks.push val[1] }
+    | block_block { push_block(val[0]) }
+    | document block_block { push_block(val[1]) }
     ;
 
 ---- header ----
@@ -158,6 +158,11 @@ end
 
 def push_child(node)
   @stack.last.children.push(node)
+end
+
+def push_block(block_node)
+  @stack.first.blocks.push(block_node)
+  push_child(block_node)
 end
 
 def next_token
