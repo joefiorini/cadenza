@@ -32,9 +32,10 @@ RSpec::Matchers.define :be_html_equivalent_to do |expected|
     full_diff = expected_doc.diff(actual_doc)
 
     # reject any diffs which have no change or are text nodes containing only whitespace
+    # finally group each diff by it's XML path
     @diff = full_diff.reject do |change, node|
       change == " " or (node.text? and node.to_html =~ /^\s*$/)
-    end
+    end.group_by {|change, node| node.path }
 
     @diff.empty?
   end
@@ -42,9 +43,13 @@ RSpec::Matchers.define :be_html_equivalent_to do |expected|
   failure_message_for_should do |actual|
     result = ""
 
-    @diff.each do |change, node|
-      result << node.path << "\n"
-      result << change << " " << node.to_html.inspect << "\n"
+    @diff.each do |path, diffs|
+      result << path << "\n"
+
+      diffs.each do |change, node|
+        result << change << " " << node.to_html.inspect << "\n"
+      end
+
       result << "\n"
     end
 
