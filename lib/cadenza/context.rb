@@ -2,12 +2,13 @@
 module Cadenza
 
    class Context
-      attr_reader :stack, :filters, :statements
+      attr_reader :stack, :filters, :statements, :loaders
 
       def initialize(initial_scope={})
          @stack = []
          @filters = {}
          @statements = {}
+         @loaders = []
 
          push initial_scope
       end
@@ -50,6 +51,25 @@ module Cadenza
 
       def evaluate_statement(name, params=[])
          @statements[name.to_sym].call([self] + params)
+      end
+
+      def add_loader(loader)
+         if loader.is_a?(String)
+            @loaders.push Cadenza::FilesystemLoader.new(loader)
+         else
+            @loaders.push loader
+         end
+      end
+
+      def load_template(template_name)
+         template = nil
+
+         @loaders.each do |loader|
+            template = loader.load_template(template_name)
+            break if template
+         end
+         
+         template
       end
 
    private

@@ -13,6 +13,7 @@ guard 'rspec', :version => 2, :cli => "--color" do
 
   watch('lib/cadenza/context.rb') { "spec/context_spec.rb" }
   watch('lib/cadenza/text_renderer.rb') { "spec/text_renderer_spec.rb" }
+  watch('lib/cadenza/filesystem_loader.rb') { "spec/filesystem_loader_spec.rb" }
 
   watch('spec/spec_helper.rb')
 end

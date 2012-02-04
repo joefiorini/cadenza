@@ -118,4 +118,48 @@ describe Cadenza::Context do
          context.lookup("foo").should == 123
       end
    end
+
+   context "loaders" do
+      let(:context) { Cadenza::Context.new }
+      let(:template_path) { fixture_filename("templates/fake") }
+      let(:filesystem_loader) { Cadenza::FilesystemLoader.new(template_path) }
+      let(:template) { FixtureSyntaxTree.new("text.parse.yml").document }
+
+      it "should start with an empty list of loaders" do
+         context.loaders.should == []
+      end
+
+      it "should allow adding a loader class" do
+         context.add_loader filesystem_loader
+         context.loaders.should == [filesystem_loader]
+      end
+
+      it "should push a string object as a filesystem loader" do
+         path = fixture_filename("foo")
+         context.add_loader(path)
+
+         context.loaders.should have(1).item
+         context.loaders[0].should be_a Cadenza::FilesystemLoader
+         context.loaders[0].path.should == path
+      end
+
+      it "should return nil if no template was found" do
+         context.add_loader(filesystem_loader)
+         context.add_loader(Cadenza::FilesystemLoader.new(template_path))
+
+         context.load_template("fake.html").should be_nil
+      end
+
+      it "should traverse the loaders in order to find the first loaded template" do
+         other_loader = Cadenza::FilesystemLoader.new(template_path)
+
+         context.add_loader(filesystem_loader)
+         context.add_loader(other_loader)
+
+         filesystem_loader.should_receive(:load_template).with("template.html").and_return(template)
+         other_loader.stub(:load_template).and_return("foo")
+
+         context.load_template("template.html").should == template
+      end
+   end
 end

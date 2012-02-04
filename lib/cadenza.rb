@@ -5,6 +5,7 @@ require File.join CADENZA_ROOT, "lexer"
 require File.join CADENZA_ROOT, "parser"
 require File.join CADENZA_ROOT, "context"
 require File.join CADENZA_ROOT, "text_renderer"
+require File.join CADENZA_ROOT, "filesystem_loader"
 require File.join CADENZA_ROOT, "version"
 
 # require all nodes
