@@ -1,20 +1,6 @@
 
 module Cadenza
-   class TextRenderer
-      attr_reader :output, :document
-
-      def initialize(output_io)
-         @output = output_io
-      end
-      
-      def render(node, context, blocks={})
-         @document ||= node
-
-         node_name = node.class.name.split("::").last.gsub!(/Node$/, '').downcase!
-
-         send("render_#{node_name}", node, context, blocks)
-      end
-
+   class TextRenderer < BaseRenderer
       def render_document(node, context, blocks)
          if node.extends
             # merge the inherited blocks onto this document's blocks to
@@ -24,7 +10,7 @@ module Cadenza
             # load the template of the document and render it to the same output stream
             template = context.load_template!(node.extends)
 
-            @document = template
+            document = template
 
             render(template, context, blocks)
          else
@@ -35,7 +21,7 @@ module Cadenza
       def render_render(node, context, blocks)
          template = context.load_template(node.filename) || ""
 
-         TextRenderer.new(@output).render(template, context)
+         TextRenderer.new(output).render(template, context)
       end
 
       def render_block(node, context, blocks)
@@ -43,18 +29,18 @@ module Cadenza
       end
 
       def render_text(node, context, blocks)
-         @output << node.text
+         output << node.text
       end
 
       def render_inject(node, context, blocks)
-         @output << node.evaluate(context).to_s
+         output << node.evaluate(context).to_s
       end
 
       def render_if(node, context, blocks)
          node.evaluate_expression_for_children(context).each {|x| render(x, context) }
       end
 
-      def render_genericstatement(node, context, blocks)
+      def render_generic_statement(node, context, blocks)
          params = node.parameters.map {|n| n.eval(context) }
          
          context.evaluate_statement(node.name, params)
@@ -95,7 +81,7 @@ module Cadenza
       # none of these should appear directly inside the body of the 
       # document but for safety we will render them anyways
       def render_constant(node, context, blocks)
-         @output << node.eval(context).to_s
+         output << node.eval(context).to_s
       end
 
       alias :render_variable   :render_constant
