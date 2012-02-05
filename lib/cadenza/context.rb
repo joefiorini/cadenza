@@ -4,8 +4,7 @@ module Cadenza
    end
 
    class Context
-      attr_reader :stack, :filters, :statements, :loaders
-
+      attr_accessor :stack, :filters, :statements, :loaders
       attr_accessor :whiny_template_loading
 
       def initialize(initial_scope={})
@@ -16,6 +15,16 @@ module Cadenza
          @whiny_template_loading = false
 
          push initial_scope
+      end
+
+      def clone
+         copy = super
+         copy.stack = stack.dup
+         copy.loaders = loaders.dup
+         copy.filters = filters.dup
+         copy.statements = statements.dup
+
+         copy
       end
 
       def lookup(identifier)
@@ -64,6 +73,10 @@ module Cadenza
          else
             @loaders.push loader
          end
+      end
+
+      def clear_loaders
+         @loaders.reject! { true }
       end
 
       def load_template(template_name)

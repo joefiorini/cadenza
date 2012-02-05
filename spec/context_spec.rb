@@ -29,6 +29,56 @@ describe Cadenza::Context do
       context.stack.should == [{:foo => "bar"}, {:baz => "foo"}]
    end
 
+   context "#clone" do
+      let(:context) { Cadenza::Context.new(:foo => "bar") }
+
+      before do
+         context.add_loader Cadenza::FilesystemLoader.new(fixture_filename "templates")
+         context.define_filter(:upcase, &:upcase)
+         context.define_statement(:assign) {|context, name, value| context.assign(name, value) }
+
+         context.loaders.should have(1).item
+         context.filters.should have(1).item
+         context.statements.should have(1).item
+      end
+
+      it "should duplicate it's stack" do
+         context.clone.stack.should_not equal context.stack
+         context.clone.stack.should == context.stack
+      end
+
+      it "should not duplicate the values of it's stack" do
+         context.clone.stack.first[:foo].should equal context.stack.first[:foo]
+      end
+
+      it "should duplicate it's filters" do
+         context.clone.filters.should_not equal context.filters
+         context.clone.filters.should == context.filters
+      end
+
+      it "should not duplicate the filter definitions" do
+         context.clone.filters[:upcase].should equal context.filters[:upcase]
+      end
+
+      it "should duplicate it's statements" do
+         context.clone.statements.should_not equal context.statements
+         context.clone.statements.should == context.statements
+      end
+
+      it "should not duplicate the statement definitions" do
+         context.clone.statements[:assign].should equal context.statements[:assign]
+      end
+
+      it "should duplicate it's loader list" do
+         context.clone.loaders.should_not equal context.loaders
+         context.clone.loaders.should == context.loaders
+      end
+
+      it "should not duplicate the loaders inside the list" do
+         context.clone.loaders.first.should equal context.loaders.first
+      end
+   end
+
    context "#lookup" do
       let(:context) do
          Cadenza::Context.new({
@@ -178,6 +228,13 @@ describe Cadenza::Context do
          other_loader.stub(:load_template).and_return("foo")
 
          context.load_template("template.html").should == template
+      end
+
+      it "should provide a method to clear the loaders" do
+         context.add_loader(filesystem_loader)
+         context.loaders.should_not be_empty
+         context.clear_loaders
+         context.loaders.should be_empty
       end
    end
 end
