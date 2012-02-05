@@ -10,17 +10,12 @@ module Cadenza
       def render(node, context, blocks={})
          @document ||= node
 
-         node_name = underscore(node.class.name.split("::").last)
+         node_name = node.class.name.split("::").last.gsub!(/Node$/, '').downcase!
 
          send("render_#{node_name}", node, context, blocks)
       end
 
-      # very consise form of ActiveSupport's underscore method
-      def underscore(word)
-         word.gsub!(/([a-z\d])([A-Z])/,'\1_\2').downcase!
-      end
-
-      def render_document_node(node, context, blocks)
+      def render_document(node, context, blocks)
          if node.extends
             # merge the inherited blocks onto this document's blocks to
             # determine what to pass to the layout template
@@ -37,35 +32,35 @@ module Cadenza
          end         
       end
 
-      def render_render_node(node, context, blocks)
+      def render_render(node, context, blocks)
          template = context.load_template(node.filename) || ""
 
          TextRenderer.new(@output).render(template, context)
       end
 
-      def render_block_node(node, context, blocks)
+      def render_block(node, context, blocks)
          (blocks[node.name] || node).children.each {|x| render(x, context) }
       end
 
-      def render_text_node(node, context, blocks)
+      def render_text(node, context, blocks)
          @output << node.text
       end
 
-      def render_inject_node(node, context, blocks)
+      def render_inject(node, context, blocks)
          @output << node.evaluate(context).to_s
       end
 
-      def render_if_node(node, context, blocks)
+      def render_if(node, context, blocks)
          node.evaluate_expression_for_children(context).each {|x| render(x, context) }
       end
 
-      def render_generic_statement_node(node, context, blocks)
+      def render_genericstatement(node, context, blocks)
          params = node.parameters.map {|n| n.eval(context) }
          
          context.evaluate_statement(node.name, params)
       end
 
-      def render_for_node(node, context, blocks)
+      def render_for(node, context, blocks)
          enumerator = node.iterable.eval(context).to_enum
          iterator = node.iterator.identifier
 
@@ -99,13 +94,13 @@ module Cadenza
 
       # none of these should appear directly inside the body of the 
       # document but for safety we will render them anyways
-      def render_constant_node(node, context, blocks)
+      def render_constant(node, context, blocks)
          @output << node.eval(context).to_s
       end
 
-      alias :render_variable_node   :render_constant_node
-      alias :render_arithmetic_node :render_constant_node
-      alias :render_boolean_node    :render_constant_node
+      alias :render_variable   :render_constant
+      alias :render_arithmetic :render_constant
+      alias :render_boolean    :render_constant
 
    end
 end
