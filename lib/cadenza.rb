@@ -1,4 +1,3 @@
-
 require 'cadenza/token'
 require 'cadenza/lexer'
 require 'cadenza/parser'
@@ -43,4 +42,8 @@ module Cadenza
 
       output.string
    end
+end
+
+Dir[File.join File.dirname(__FILE__), 'cadenza', 'filters', '*.rb'].each do |filename|
+   Cadenza::BaseContext.instance_eval File.read(filename)
 end

@@ -2,22 +2,6 @@ require 'cgi'
 
 module Cadenza
   class Filters
-    def self.addslashes(string)
-      return string.gsub(/\\/, "\\\\").gsub(/"/,'\\\\"').gsub(/'/,"\\\\'")
-    end
-    
-    def self.capitalize(string)
-      return string.capitalize
-    end
-    
-    def self.center(string, len, padstr=' ')
-      return string.center(len,padstr)
-    end
-    
-    def self.cut(string, value)
-      return string.gsub(value,'')
-    end
-    
     def self.date(date, format='%F')
       return date.strftime(format)
     end

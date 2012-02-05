@@ -3,6 +3,12 @@ module Cadenza
    class TemplateNotFoundError < StandardError
    end
 
+   class FilterNotDefinedError < StandardError
+   end
+
+   class StatementNotDefinedError < StandardError
+   end
+
    class Context
       attr_accessor :stack, :filters, :statements, :loaders
       attr_accessor :whiny_template_loading
@@ -56,7 +62,9 @@ module Cadenza
       end
 
       def evaluate_filter(name, params=[])
-         @filters[name.to_sym].call(*params)
+         filter = @filters[name.to_sym]
+         raise FilterNotDefinedError.new("undefined filter '#{name}'") if filter.nil?
+         filter.call(*params)
       end
 
       def define_statement(name, &block)
@@ -64,7 +72,9 @@ module Cadenza
       end
 
       def evaluate_statement(name, params=[])
-         @statements[name.to_sym].call([self] + params)
+         statement = @statements[name.to_sym]
+         raise StatementNotDefinedError.new("undefined statement '#{name}'") if statement.nil?
+         statement.call([self] + params)
       end
 
       def add_loader(loader)

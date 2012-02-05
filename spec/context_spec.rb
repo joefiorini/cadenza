@@ -149,7 +149,13 @@ describe Cadenza::Context do
       end
 
       it "should evaluate a filter" do         
-         context.evaluate_filter(:pluralize, "bar").should == "bars"
+         context.evaluate_filter(:pluralize, ["bar"]).should == "bars"
+      end
+
+      it "should raise a FilterNotDefinedError if the filter is not defined" do
+         lambda do
+            context.evaluate_filter(:foo, ["bar"])
+         end.should raise_error Cadenza::FilterNotDefinedError
       end
    end
 
@@ -170,6 +176,12 @@ describe Cadenza::Context do
          context.evaluate_statement(:assign, ["foo", 123])
 
          context.lookup("foo").should == 123
+      end
+
+      it "should raise a StatementNotDefinedError if the statement is not defined" do
+         lambda do
+            context.evaluate_statement(:foo, [])
+         end.should raise_error Cadenza::StatementNotDefinedError
       end
    end
 
