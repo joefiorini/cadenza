@@ -5,24 +5,3 @@ RSpec::Core::RakeTask.new do |t|
   t.pattern = FileList['spec/**/*_spec.rb']
   t.rspec_opts = ['--options', "spec/spec.opts"]
 end
-
-namespace :spec do
-  desc "Run the Cadenza test suite for lexer tests"
-  RSpec::Core::RakeTask.new(:lexer) do |t|
-    t.pattern = FileList["spec/lexer/**/*_spec.rb"]
-    t.rspec_opts = ['--options', "spec/spec.opts"]
-  end
-
-  desc "Run the Cadenza test suite for parser tests"
-  RSpec::Core::RakeTask.new(:parser) do |t|
-    t.pattern = FileList["spec/parser/**/*_spec.rb"]
-    t.rspec_opts = ['--options', "spec/spec.opts"]
-  end
-
-  desc "Run the Cadenza test suite for node tests"
-  RSpec::Core::RakeTask.new(:nodes) do |t|
-    t.pattern = FileList["spec/nodes/**/*_spec.rb"]
-    t.rspec_opts = ['--options', "spec/spec.opts"]
-  end
-
-end
