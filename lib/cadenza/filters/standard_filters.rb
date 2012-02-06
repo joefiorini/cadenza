@@ -90,14 +90,3 @@ define_filter :wordwrap do |input, length, linefeed="\n"|
    input.gsub(/(.{1,#{length}})(\s+|\Z)/, "\\1#{linefeed}")
 end
 
-# s.gsub(/(.{1,#{width}})(\s+|\Z)/, "\\1\n")
-
-
-    # def self.wordwrap(string, length, separator="<br/>")
-    #   result = ""
-    #   string = string.clone
-    #   while string and string.length > 0
-    #     result << string.slice!(0..length-1) << separator
-    #   end
-    #   return result
-    # end
