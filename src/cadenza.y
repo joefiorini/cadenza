@@ -43,7 +43,7 @@ rule
 
   filter
     : IDENTIFIER                    { result = FilterNode.new(val[0].value) }
-    | IDENTIFIER ':' parameter_list { result = FilterNode.new(val[0].value, val[1]) }
+    | IDENTIFIER ':' parameter_list { result = FilterNode.new(val[0].value, val[2]) }
     ;
 
   filter_list

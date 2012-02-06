@@ -22,4 +22,8 @@ describe Cadenza::Parser, 'inject statements' do
   it "should parse an inject statement with filters which have multiple parameters" do
     parser.parse("{{ name | somefilter: 'foo', 3.14159 }}").should have_an_identical_syntax_tree_to "inject-one-filter-with-multiple-params.parse.yml"
   end
+
+  it "should parse a multiple filter inject statement with multiple parameters" do
+    parser.parse("{{ name | trim | somefilter: 'foo', 3.14159 }}").should have_an_identical_syntax_tree_to "inject-multiple-filter-multiple-params.parse.yml"
+  end
 end

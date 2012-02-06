@@ -58,7 +58,7 @@ private
   end
 
   def parse_filter_node(node)
-    identifier = node_for_key(node, "identifier")
+    identifier = node["identifier"]
     parameters = list_for_key(node, "parameters")
     
     Cadenza::FilterNode.new(identifier, parameters)

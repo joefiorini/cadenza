@@ -487,7 +487,7 @@ module_eval(<<'.,.,', 'cadenza.y', 44)
 
 module_eval(<<'.,.,', 'cadenza.y', 45)
   def _reduce_24(val, _values, result)
-     result = FilterNode.new(val[0].value, val[1]) 
+     result = FilterNode.new(val[0].value, val[2]) 
     result
   end
 .,.,

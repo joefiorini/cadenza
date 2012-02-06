@@ -6,7 +6,7 @@ namespace :doc do
     require File.expand_path(File.join("..", "lib", "cadenza"), File.dirname(__FILE__))
 
     # get some useful directories before we get started
-    root_directory = File.join(File.dirname(__FILE__), '..')
+    root_directory = File.expand_path("..", File.dirname(__FILE__))
     source_directory = File.join(root_directory, 'doc', 'src')
     output_directory = File.join(root_directory, 'doc', 'manual')
     
@@ -20,10 +20,11 @@ namespace :doc do
     Dir.glob(File.join(source_directory, '*.cadenza')).each do |cadenza_file|
       template_name = File.basename(cadenza_file, ".cadenza")
 
-      input_file = File.join(source_directory, "#{template_name}.cadenza")
+      input_file = File.expand_path("#{template_name}.cadenza", source_directory)
 
-      output_file = File.join(output_directory, "#{template_name}.html")
+      output_file = File.expand_path("#{template_name}.html", output_directory)
 
+      puts "rendering #{input_file} to #{output_file}"
       File.open(output_file, "w") do |file|
         file.write Cadenza.render(File.read(input_file), scope)
       end

@@ -8,7 +8,8 @@ module Cadenza
     end
 
     def ==(rhs)
-      self.value == rhs.value
+      self.value == rhs.value and
+      self.filters == rhs.filters
     end
 
     def implied_globals

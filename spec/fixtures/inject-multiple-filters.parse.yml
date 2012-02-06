@@ -7,10 +7,6 @@ DocumentNode:
             value: name
         filters:
           - FilterNode:
-               identifier: 
-                  VariableNode:
-                     value: trim
+               identifier: trim
           - FilterNode:
-               identifier: 
-                  VariableNode:
-                     value: upcase
+               identifier: upcase

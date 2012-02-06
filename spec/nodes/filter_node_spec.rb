@@ -7,6 +7,34 @@ describe Cadenza::FilterNode do
     filter.identifier.should == "trim"
   end
 
+  it "should be equal to another filter with the same name" do
+    filter_a = Cadenza::FilterNode.new("trim")
+    filter_b = Cadenza::FilterNode.new("trim")
+
+    filter_a.should == filter_b
+  end
+
+  it "should not equal another node with a different name" do
+    filter_a = Cadenza::FilterNode.new("trim")
+    filter_b = Cadenza::FilterNode.new("cut")
+
+    filter_a.should_not == filter_b
+  end
+
+  it "should equal a node with the same parameters" do
+    filter_a = Cadenza::FilterNode.new("trim", [Cadenza::ConstantNode.new(10)])
+    filter_b = Cadenza::FilterNode.new("trim", [Cadenza::ConstantNode.new(10)])
+
+    filter_a.should == filter_b
+  end
+
+  it "should not equal a node with different parameters" do
+    filter_a = Cadenza::FilterNode.new("trim", [Cadenza::ConstantNode.new(10)])
+    filter_b = Cadenza::FilterNode.new("trim", [Cadenza::ConstantNode.new(30)])
+
+    filter_a.should_not == filter_b    
+  end
+
   it "should take a list of parameter nodes" do
     constant_a = Cadenza::ConstantNode.new(10)
 

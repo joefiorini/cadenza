@@ -7,9 +7,7 @@ DocumentNode:
                value: name
          filters:
             - FilterNode:
-                identifier: 
-                  VariableNode:
-                    value: cut
+                identifier: cut
                 parameters:
                   - ConstantNode:
                       value: 5

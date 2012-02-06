@@ -7,6 +7,4 @@ DocumentNode:
             value: name
         filters:
           - FilterNode:
-               identifier: 
-                  VariableNode:
-                     value: trim
+               identifier: trim
