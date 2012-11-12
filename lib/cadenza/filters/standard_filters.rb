@@ -95,3 +95,17 @@ define_filter :wordwrap do |input, length, *args|
    input.gsub(/(.{1,#{length}})(\s+|\Z)/, "\\1#{linefeed}")
 end
 
+define_filter :only, &:take
+
+define_filter :reversed, &:reverse
+define_filter :offset, &:drop
+
+define_filter :sort do |input, field|
+  if field.nil?
+    input.sort
+  elsif input.first.respond_to?('[]') and !input.first[field].nil?
+    input.sort { |a,b| a[field] <=> b[field] }
+  elsif input.first.respond_to?(field)
+    input.sort { |a,b| a.send(field) <=> b.send(field) }
+  end
+end

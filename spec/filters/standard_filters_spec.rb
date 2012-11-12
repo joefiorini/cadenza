@@ -151,4 +151,59 @@ describe Cadenza::BaseContext, 'standard filters' do
          wrapped.should == "This text is not too<br/>short to be wrapped.<br/>"
       end
    end
+
+   class Person < Cadenza::ContextObject
+     attr_reader :first_name
+     attr_reader :last_name
+     attr_reader :ssn
+
+     def initialize(first_name, last_name, ssn)
+       @first_name, @last_name, @ssn = first_name, last_name, ssn
+     end
+
+   end
+
+   describe "collections" do
+     let(:first_person) { Person.new("Jim", "Bob", 1234) }
+     let(:second_person) { Person.new("Ralph", "Roger", 9012) }
+     let(:last_person) { Person.new("Sally", "Sue", 5678) }
+     let(:collection) { [second_person, last_person, first_person] }
+     let(:basic_array) { [3,1,2,6,8] }
+     let(:first_square) { { :area => 5 } }
+     let(:second_square) { { :area => 10 } }
+     let(:last_square) { { :area => 20 } }
+     let(:hashes) { [first_square, second_square, last_square] }
+
+     context "sort" do
+       it "sorts a collection of context objects" do
+         subject.evaluate_filter(:sort, [collection, "last_name"]).should eq(
+           [first_person, second_person, last_person])
+       end
+       it "sorts a basic array" do
+         subject.evaluate_filter(:sort, [basic_array, nil]).should eq [1,2,3,6,8]
+       end
+       it "sorts a collection of hashes" do
+         subject.evaluate_filter(:sort, [hashes, :area]).should eq [first_square, second_square, last_square]
+       end
+     end
+
+     context "only" do
+       it "takes the first n elements from an array" do
+         subject.evaluate_filter(:only, [basic_array, 2]).should eq [3,1]
+       end
+     end
+
+     context "reversed" do
+       it "reverses the elements of an array" do
+         subject.evaluate_filter(:reversed, [basic_array]).should eq [8,6,2,1,3]
+       end
+     end
+
+     context "offset" do
+       it "returns last length - n elements of array" do
+         subject.evaluate_filter(:offset, [basic_array, 2]).should eq [2,6,8]
+       end
+     end
+
+   end
 end
